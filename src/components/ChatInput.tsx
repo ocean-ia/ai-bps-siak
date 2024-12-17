@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Send } from 'lucide-react';
 
 interface ChatInputProps {
   onSend: (message: string) => void;
   isLoading: boolean;
+  placeholder?: string;
 }
 
-export const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
+export function ChatInput({ onSend, isLoading, placeholder }: ChatInputProps) {
   const [message, setMessage] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (message.trim() && !isLoading) {
-      onSend(message);
+      onSend(message.trim());
       setMessage('');
     }
   };
@@ -24,13 +24,13 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSend, isLoading }) => {
       <Input
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        placeholder="Tanyakan tentang data BPS Kabupaten Siak..."
+        placeholder={placeholder || "Type your message..."}
         disabled={isLoading}
         className="flex-1"
       />
       <Button type="submit" disabled={isLoading || !message.trim()}>
-        <Send className="h-4 w-4" />
+        {isLoading ? 'Sending...' : 'Send'}
       </Button>
     </form>
   );
-};
+}

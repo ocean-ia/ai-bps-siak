@@ -19,8 +19,6 @@ const Index = () => {
       // Add user message to chat
       setMessages(prev => [...prev, { text: message, isUser: true }]);
 
-      // This is where you would integrate with Gemini AI API
-      // For now, we'll simulate a response
       const response = await fetch('api/chat.php', {
         method: 'POST',
         headers: {
@@ -35,6 +33,10 @@ const Index = () => {
 
       const data = await response.json();
       
+      if (!data.success) {
+        throw new Error(data.error || 'Unknown error occurred');
+      }
+
       // Add AI response to chat
       setMessages(prev => [...prev, { text: data.response, isUser: false }]);
     } catch (error) {
