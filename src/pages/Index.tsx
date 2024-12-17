@@ -21,16 +21,29 @@ const Index = () => {
 
       // This is where you would integrate with Gemini AI API
       // For now, we'll simulate a response
-      const response = "Ini adalah simulasi respons dari AI. Dalam implementasi PHP, Anda akan mengintegrasikan dengan Gemini AI API untuk mendapatkan respons yang sebenarnya berdasarkan data BPS Kabupaten Siak.";
+      const response = await fetch('api/chat.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get response from server');
+      }
+
+      const data = await response.json();
       
       // Add AI response to chat
-      setMessages(prev => [...prev, { text: response, isUser: false }]);
+      setMessages(prev => [...prev, { text: data.response, isUser: false }]);
     } catch (error) {
       toast({
         title: "Error",
         description: "Terjadi kesalahan saat memproses pertanyaan Anda. Silakan coba lagi.",
         variant: "destructive",
       });
+      console.error('Error:', error);
     } finally {
       setIsLoading(false);
     }
@@ -41,7 +54,7 @@ const Index = () => {
       <div className="container mx-auto max-w-4xl px-4 py-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-primary mb-2">
-            Portal Data BPS Kabupaten Siak
+            Welcome to AI Data Assistant BPS Kabupaten Siak
           </h1>
           <p className="text-muted-foreground">
             Tanyakan informasi seputar data statistik Kabupaten Siak
@@ -65,7 +78,11 @@ const Index = () => {
               ))
             )}
           </div>
-          <ChatInput onSend={handleSendMessage} isLoading={isLoading} />
+          <ChatInput 
+            onSend={handleSendMessage} 
+            isLoading={isLoading}
+            placeholder="Contoh: Apa itu Badan Pusat Statistik?"
+          />
         </div>
       </div>
     </div>
