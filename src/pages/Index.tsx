@@ -18,6 +18,9 @@ const Index = () => {
       setIsLoading(true);
       // Add user message to chat
       setMessages(prev => [...prev, { text: message, isUser: true }]);
+      
+      // Add temporary loading message
+      setMessages(prev => [...prev, { text: "Generating...", isUser: false }]);
 
       const response = await fetch('api/chat.php', {
         method: 'POST',
@@ -37,9 +40,11 @@ const Index = () => {
         throw new Error(data.error || 'Unknown error occurred');
       }
 
-      // Add AI response to chat
-      setMessages(prev => [...prev, { text: data.response, isUser: false }]);
+      // Replace loading message with AI response
+      setMessages(prev => prev.slice(0, -1).concat({ text: data.response, isUser: false }));
     } catch (error) {
+      // Remove loading message in case of error
+      setMessages(prev => prev.slice(0, -1));
       toast({
         title: "Error",
         description: "Terjadi kesalahan saat memproses pertanyaan Anda. Silakan coba lagi.",
@@ -75,7 +80,7 @@ const Index = () => {
                   key={idx}
                   message={msg.text}
                   isUser={msg.isUser}
-                  isLoading={isLoading && idx === messages.length - 1}
+                  isLoading={!msg.isUser && idx === messages.length - 1 && isLoading}
                 />
               ))
             )}
