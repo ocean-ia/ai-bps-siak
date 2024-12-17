@@ -4,18 +4,8 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
-require_once __DIR__ . '/vendor/autoload.php';
-
-// Initialize Gemini API
-function initGeminiAI() {
-    $API_KEY = 'YOUR_API_KEY'; // Replace with your actual API key
-    
-    // Initialize Google Client
-    $client = new Google\Client();
-    $client->setDeveloperKey($API_KEY);
-    
-    return $client;
-}
+// Replace with your actual Gemini API key
+$API_KEY = 'YOUR_API_KEY';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
@@ -26,7 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             throw new Exception('Message is required');
         }
 
-        $client = initGeminiAI();
+        // Prepare the request to Gemini API
+        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
         
         // Initialize chat history
         $history = [
@@ -40,9 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]
         ];
 
-        // Prepare the request to Gemini API
-        $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
-        $data = [
+        $requestData = [
             'contents' => array_merge($history, [
                 [
                     'role' => 'user',
@@ -59,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $ch = curl_init($url . '?key=' . $API_KEY);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($requestData));
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 
         $response = curl_exec($ch);
