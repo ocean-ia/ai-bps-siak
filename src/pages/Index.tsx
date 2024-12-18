@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { ChatInput } from '@/components/ChatInput';
 import { ChatMessage } from '@/components/ChatMessage';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 
 interface Message {
   text: string;
@@ -22,7 +22,11 @@ const Index = () => {
       // Add temporary loading message
       setMessages(prev => [...prev, { text: "Generating...", isUser: false }]);
 
-      const response = await fetch('api/chat.php', {
+      // Use absolute path to API
+      const apiUrl = window.location.origin + '/api/chat.php';
+      console.log('Sending request to:', apiUrl); // Debug log
+
+      const response = await fetch(apiUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,10 +35,13 @@ const Index = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get response from server');
+        const errorText = await response.text();
+        console.error('API Error:', errorText); // Debug log
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log('API Response:', data); // Debug log
       
       if (!data.success) {
         throw new Error(data.error || 'Unknown error occurred');
@@ -43,14 +50,14 @@ const Index = () => {
       // Replace loading message with AI response
       setMessages(prev => prev.slice(0, -1).concat({ text: data.response, isUser: false }));
     } catch (error) {
+      console.error('Detailed Error:', error); // Debug log
       // Remove loading message in case of error
       setMessages(prev => prev.slice(0, -1));
       toast({
         title: "Error",
-        description: "Terjadi kesalahan saat memproses pertanyaan Anda. Silakan coba lagi.",
+        description: error instanceof Error ? error.message : "Terjadi kesalahan saat memproses pertanyaan Anda. Silakan coba lagi.",
         variant: "destructive",
       });
-      console.error('Error:', error);
     } finally {
       setIsLoading(false);
     }
