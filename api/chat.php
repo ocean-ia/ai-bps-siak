@@ -4,6 +4,10 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 // Handle preflight requests
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -11,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Replace with your actual Gemini API key
-$API_KEY = 'YOUR_API_KEY';
+$API_KEY = 'AIzaSyABbRf2u83A-QAGLa9xp4YunF88d18xTIY';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
@@ -65,38 +69,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ];
 
         // Initialize cURL session
-        $ch = curl_init($url . '?key=' . $API_KEY);
+        $ch = curl_init();
         if ($ch === false) {
             throw new Exception('Failed to initialize cURL');
         }
 
-        // Set cURL options
+        // Set the complete URL with API key
+        $fullUrl = $url . '?key=' . $API_KEY;
+        curl_setopt($ch, CURLOPT_URL, $fullUrl);
+
+        // Set cURL options with more detailed error handling
         curl_setopt_array($ch, [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => json_encode($requestData),
-            CURLOPT_HTTPHEADER => ['Content-Type: application/json'],
-            CURLOPT_SSL_VERIFYPEER => true,
-            CURLOPT_VERBOSE => true
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json',
+                'Accept: application/json'
+            ],
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => 0,
+            CURLOPT_VERBOSE => true,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1
         ]);
+
+        // Create a temporary file handle for CURL debug output
+        $verbose = fopen('php://temp', 'w+');
+        curl_setopt($ch, CURLOPT_STDERR, $verbose);
 
         // Execute cURL request
         $response = curl_exec($ch);
         
-        // Check for cURL errors
+        // Check for cURL errors with detailed information
         if ($response === false) {
+            rewind($verbose);
+            $verboseLog = stream_get_contents($verbose);
+            
             $error = curl_error($ch);
             $info = curl_getinfo($ch);
-            curl_close($ch);
-            throw new Exception('cURL error: ' . $error . '. Info: ' . json_encode($info));
+            
+            error_log("Verbose information:\n" . $verboseLog);
+            error_log("CURL Error Details: " . print_r([
+                'error' => $error,
+                'info' => $info,
+                'verbose' => $verboseLog
+            ], true));
+            
+            throw new Exception("cURL error: $error");
         }
 
-        // Get HTTP status code
+        // Get HTTP status code and response info
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $responseInfo = curl_getinfo($ch);
+        
+        // Log response information
+        error_log("API Response Info: " . print_r($responseInfo, true));
+        error_log("API Response Body: " . $response);
+
         curl_close($ch);
+        fclose($verbose);
 
         if ($httpCode !== 200) {
-            throw new Exception('HTTP error: ' . $httpCode . '. Response: ' . $response);
+            throw new Exception("HTTP error: $httpCode. Response: $response");
         }
 
         // Parse response
@@ -122,10 +159,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     } catch (Exception $e) {
         error_log('Chat API Error: ' . $e->getMessage());
+        error_log('Full error details: ' . print_r($e, true));
+        
         http_response_code(500);
         echo json_encode([
             'success' => false,
-            'error' => $e->getMessage()
+            'error' => $e->getMessage(),
+            'details' => 'Check server logs for more information'
         ]);
     }
 } else {
