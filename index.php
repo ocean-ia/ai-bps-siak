@@ -58,7 +58,8 @@
             promptInput.value = '';
 
             try {
-                const response = await fetch('api/chat.php', {
+                // Use relative path for API endpoint
+                const response = await fetch('./api/chat.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
