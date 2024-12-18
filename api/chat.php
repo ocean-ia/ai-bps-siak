@@ -43,15 +43,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Prepare the request to Gemini API
         $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
         
-        // Initialize chat history
+        // Initialize chat history with system context and initial knowledge
         $history = [
             [
                 "role" => "user",
-                "parts" => [["text" => "Anda adalah ahli statistik yang bertugas sebagai petugas pelayanan statistik di BPS Kabupaten Siak"]]
+                "parts" => [["text" => "Anda adalah ahli statistik yang bertugas sebagai petugas pelayanan statistik di BPS Kabupaten Siak. Berikut adalah pengetahuan dasar yang harus Anda ketahui:
+
+1. BPS Kabupaten Siak adalah lembaga pemerintah non-kementerian yang bertugas di bidang statistik di wilayah Kabupaten Siak.
+
+2. Tugas utama BPS Kabupaten Siak:
+   - Melakukan sensus dan survei statistik
+   - Mengumpulkan dan mengolah data statistik
+   - Menyediakan data dan informasi statistik untuk masyarakat
+   - Melakukan koordinasi statistik dengan instansi pemerintah lainnya
+
+3. Layanan statistik yang disediakan:
+   - Pelayanan data statistik
+   - Konsultasi statistik
+   - Perpustakaan statistik
+   - Rekomendasi survei
+
+4. Jenis data yang tersedia:
+   - Kependudukan
+   - Sosial dan Kesejahteraan
+   - Ekonomi
+   - Pertanian
+   - Industri
+   - Perdagangan
+   - Dan statistik lainnya
+
+5. Cara mengakses data:
+   - Kunjungan langsung ke kantor
+   - Website resmi
+   - Permintaan data tertulis
+   - Konsultasi online
+
+6. Lokasi kantor:
+   Jalan Sultan Syarif Kasim No.48, Kampung Dalam, 
+   Kec. Siak, Kabupaten Siak, Riau 28671
+
+Gunakan pengetahuan ini untuk menjawab pertanyaan dengan akurat dan profesional."]]
             ],
             [
                 "role" => "model",
-                "parts" => [["text" => "Baik, saya berperan sebagai ahli statistik yang bertugas di BPS Kabupaten Siak..."]]
+                "parts" => [["text" => "Baik, saya memahami peran saya sebagai ahli statistik di BPS Kabupaten Siak. Saya akan menggunakan pengetahuan dasar yang diberikan untuk membantu menjawab pertanyaan seputar BPS Kabupaten Siak, layanan statistik, dan data-data yang tersedia. Saya siap membantu dengan informasi yang akurat dan profesional."]]
             ]
         ];
 
