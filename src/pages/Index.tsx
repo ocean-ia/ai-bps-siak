@@ -59,9 +59,9 @@ const Index = () => {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
             <img 
-              src="./images/bps-siak-logo.png" 
+              src="/images/bps-siak-logo.png" 
               alt="BPS Kabupaten Siak Logo" 
-              className="h-20 w-auto object-contain"
+              className="h-24 w-auto object-contain"
             />
           </div>
           <h1 className="text-3xl font-bold text-primary mb-2">
