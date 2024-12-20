@@ -61,7 +61,7 @@ const Index = () => {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
             <img 
-              src="/bps-siak-logo.png" 
+              src="./images/bps-siak-logo.png" 
               alt="BPS Kabupaten Siak Logo" 
               className="h-20 object-contain"
             />
