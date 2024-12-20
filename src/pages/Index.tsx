@@ -16,10 +16,8 @@ const Index = () => {
   const handleSendMessage = async (message: string) => {
     try {
       setIsLoading(true);
-      // Add user message to chat
       setMessages(prev => [...prev, { text: message, isUser: true }]);
 
-      // Use absolute path to API
       const apiUrl = window.location.origin + '/api/chat.php';
       console.log('Sending request to:', apiUrl);
 
@@ -44,7 +42,6 @@ const Index = () => {
         throw new Error(data.error || 'Unknown error occurred');
       }
 
-      // Add AI response to chat
       setMessages(prev => [...prev, { text: data.response, isUser: false }]);
     } catch (error) {
       console.error('Detailed Error:', error);
@@ -62,8 +59,15 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto max-w-4xl px-4 py-8">
         <div className="text-center mb-8">
+          <div className="flex items-center justify-center mb-4">
+            <img 
+              src="/bps-siak-logo.png" 
+              alt="BPS Kabupaten Siak Logo" 
+              className="h-20 object-contain"
+            />
+          </div>
           <h1 className="text-3xl font-bold text-primary mb-2">
-            Welcome to AI Data Assistant BPS Kabupaten Siak
+            AI Data Assistant BPS Kabupaten Siak
           </h1>
           <p className="text-muted-foreground">
             Tanyakan informasi seputar data statistik Kabupaten Siak
