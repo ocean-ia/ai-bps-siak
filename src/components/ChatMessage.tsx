@@ -12,11 +12,20 @@ interface ChatMessageProps {
 export const ChatMessage: React.FC<ChatMessageProps> = ({ message, isUser, isLoading }) => {
   if (isLoading) {
     return (
-      <div className="flex w-full mb-4 justify-start">
-        <div className="max-w-[80%] space-y-3">
-          <Skeleton className="h-4 w-[250px]" />
-          <Skeleton className="h-4 w-[200px]" />
-          <Skeleton className="h-4 w-[150px]" />
+      <div className={cn(
+        "flex w-full mb-4",
+        "justify-start"
+      )}>
+        <div className={cn(
+          "max-w-[80%] rounded-lg p-4 prose prose-sm dark:prose-invert",
+          "bg-muted"
+        )}>
+          <div className="flex items-center space-x-2">
+            <div className="animate-pulse">Generating</div>
+            <div className="animate-[bounce_1s_infinite]">.</div>
+            <div className="animate-[bounce_1s_infinite_200ms]">.</div>
+            <div className="animate-[bounce_1s_infinite_400ms]">.</div>
+          </div>
         </div>
       </div>
     );
