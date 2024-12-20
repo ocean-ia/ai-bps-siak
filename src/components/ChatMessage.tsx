@@ -1,5 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface ChatMessageProps {
   message: string;
@@ -8,6 +9,18 @@ interface ChatMessageProps {
 }
 
 export const ChatMessage: React.FC<ChatMessageProps> = ({ message, isUser, isLoading }) => {
+  if (isLoading) {
+    return (
+      <div className="flex w-full mb-4 justify-start">
+        <div className="max-w-[80%] space-y-3">
+          <Skeleton className="h-4 w-[250px]" />
+          <Skeleton className="h-4 w-[200px]" />
+          <Skeleton className="h-4 w-[150px]" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={cn(
       "flex w-full mb-4",
@@ -15,8 +28,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, isUser, isLoa
     )}>
       <div className={cn(
         "max-w-[80%] rounded-lg p-4",
-        isUser ? "bg-primary text-white" : "bg-muted",
-        isLoading && "animate-pulse"
+        isUser ? "bg-primary text-primary-foreground" : "bg-muted"
       )}>
         {message}
       </div>
