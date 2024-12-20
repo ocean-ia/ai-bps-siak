@@ -18,10 +18,8 @@ const Index = () => {
       setIsLoading(true);
       setMessages(prev => [...prev, { text: message, isUser: true }]);
 
-      const apiUrl = window.location.origin + '/api/chat.php';
-      console.log('Sending request to:', apiUrl);
-
-      const response = await fetch(apiUrl, {
+      // Use relative path for API endpoint
+      const response = await fetch('./api/chat.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -63,7 +61,7 @@ const Index = () => {
             <img 
               src="./images/bps-siak-logo.png" 
               alt="BPS Kabupaten Siak Logo" 
-              className="h-20 object-contain"
+              className="h-20 w-auto object-contain"
             />
           </div>
           <h1 className="text-3xl font-bold text-primary mb-2">
