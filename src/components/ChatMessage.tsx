@@ -1,6 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Skeleton } from '@/components/ui/skeleton';
+import ReactMarkdown from 'react-markdown';
 
 interface ChatMessageProps {
   message: string;
@@ -27,10 +28,14 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, isUser, isLoa
       isUser ? "justify-end" : "justify-start"
     )}>
       <div className={cn(
-        "max-w-[80%] rounded-lg p-4",
+        "max-w-[80%] rounded-lg p-4 prose prose-sm dark:prose-invert",
         isUser ? "bg-primary text-primary-foreground" : "bg-muted"
       )}>
-        {message}
+        {isUser ? (
+          message
+        ) : (
+          <ReactMarkdown>{message}</ReactMarkdown>
+        )}
       </div>
     </div>
   );
