@@ -17,11 +17,11 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, isUser, isLoa
         "justify-start"
       )}>
         <div className={cn(
-          "max-w-[80%] rounded-lg p-4 prose prose-sm dark:prose-invert",
-          "bg-muted"
+          "max-w-[80%] rounded-lg p-4",
+          "bg-gray-100 border border-gray-200 shadow-sm"
         )}>
-          <div className="flex items-center space-x-2">
-            <div className="animate-pulse">Generating</div>
+          <div className="flex items-center space-x-2 text-gray-700 font-medium">
+            <div>Generating</div>
             <div className="animate-[bounce_1s_infinite]">.</div>
             <div className="animate-[bounce_1s_infinite_200ms]">.</div>
             <div className="animate-[bounce_1s_infinite_400ms]">.</div>
