@@ -21,7 +21,7 @@
             align-items: center;
         }
         .main-content {
-            padding-bottom: 50px; /* Space for form + footer */
+            padding-bottom: 40vh; /* Space for form + footer */
         }
     </style>
 </head>
@@ -41,7 +41,7 @@
         </div>
 
         <div class="bg-white rounded-lg p-4 flex-1 flex flex-col">
-            <div id="chat-messages" class="flex-1 space-y-4">
+            <div id="chat-messages" class="flex-1 flex flex-col justify-center space-y-4">
                 <div id="welcome-message" class="text-center text-gray-500 text-xl py-20">
                     Mulai mengajukan pertanyaan tentang data BPS Kabupaten Siak
                 </div>
