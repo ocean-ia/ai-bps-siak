@@ -16,7 +16,6 @@ form.onsubmit = async (ev) => {
         welcomeMessage.style.display = 'none';
     }
 
-    // Add user message to chat
     appendMessage(userMessage, true);
     promptInput.value = '';
 
@@ -39,7 +38,6 @@ form.onsubmit = async (ev) => {
             throw new Error(data.error || 'Unknown error occurred');
         }
 
-        // Add AI response to chat
         appendMessage(data.response, false);
 
     } catch (error) {
@@ -54,7 +52,13 @@ function appendMessage(message, isUser, isError = false) {
     
     const textDiv = document.createElement('div');
     textDiv.className = 'text-gray-800';
-    textDiv.textContent = message;
+    
+    // If it's not a user message, render HTML content
+    if (!isUser) {
+        textDiv.innerHTML = message;
+    } else {
+        textDiv.textContent = message;
+    }
     
     messageDiv.appendChild(textDiv);
     chatMessages.appendChild(messageDiv);
