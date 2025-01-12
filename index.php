@@ -44,23 +44,37 @@ SessionManager::init();
             position: sticky;
             bottom: 0;
         }
+        .sticky-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            z-index: 50;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .content-wrapper {
+            padding-top: 120px;
+        }
     </style>
 </head>
 <body class="bg-white min-h-screen flex flex-col">
-    <div class="container mx-auto max-w-4xl px-4 py-8 flex-1 flex flex-col">
-        <div class="text-center mb-8">
-            <div class="flex items-center justify-center mb-4">
+    <header class="sticky-header">
+        <div class="container mx-auto max-w-4xl px-4 py-4">
+            <div class="flex items-center justify-center gap-4">
                 <img 
                     src="images/bps-siak-logo.png" 
                     alt="BPS Kabupaten Siak Logo" 
                     class="h-10 w-auto object-contain"
                 />
+                <h1 class="text-2xl font-bold text-blue-500">
+                    AI Data Assistant
+                </h1>
             </div>
-            <h1 class="text-3xl font-bold text-blue-500 mb-2">
-                AI Data Assistant
-            </h1>
         </div>
+    </header>
 
+    <div class="container mx-auto max-w-4xl px-4 flex-1 flex flex-col content-wrapper">
         <div class="bg-white rounded-lg shadow-lg flex-1 flex flex-col chat-container">
             <div class="messages-container" id="chat-messages">
                 <?php
