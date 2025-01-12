@@ -15,6 +15,7 @@ SessionManager::init();
             height: calc(100vh - 200px);
             display: flex;
             flex-direction: column;
+            position: relative;
         }
         .messages-container {
             flex-grow: 1;
@@ -24,6 +25,7 @@ SessionManager::init();
             display: flex;
             flex-direction: column;
             scroll-behavior: smooth;
+            position: relative;
         }
         .message {
             padding: 1rem;
@@ -32,7 +34,13 @@ SessionManager::init();
             word-break: break-word;
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
             animation: fadeIn 0.3s ease-in-out;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .message.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
@@ -91,14 +99,39 @@ SessionManager::init();
             text-align: center;
             padding: 2rem;
         }
+
         .typing-indicator {
             display: none;
             padding: 1rem;
             color: #6b7280;
             font-style: italic;
+            position: sticky;
+            bottom: 0;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            margin-top: auto;
         }
         .typing-indicator.active {
-            display: block;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .typing-dots {
+            display: flex;
+            gap: 0.25rem;
+        }
+        .typing-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: #6b7280;
+            animation: typingDot 1.4s infinite ease-in-out;
+        }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingDot {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-4px); }
         }
     </style>
 </head>
@@ -135,7 +168,7 @@ SessionManager::init();
                 } else {
                     foreach ($messages as $message) {
                         $class = $message['type'] === 'user' ? 'user-message' : 'ai-message';
-                        echo "<div class='message {$class}'>{$message['content']}</div>";
+                        echo "<div class='message {$class} visible'>{$message['content']}</div>";
                     }
                 }
                 ?>
@@ -143,6 +176,11 @@ SessionManager::init();
             
             <div class="typing-indicator" id="typing-indicator">
                 AI sedang mengetik...
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
             </div>
             
             <div class="input-container">
@@ -178,10 +216,18 @@ SessionManager::init();
 
         function scrollToBottom(smooth = true) {
             if (messagesContainer) {
-                messagesContainer.scrollTo({
+                const scrollOptions = {
                     top: messagesContainer.scrollHeight,
                     behavior: smooth ? 'smooth' : 'auto'
-                });
+                };
+                messagesContainer.scrollTo(scrollOptions);
+                
+                // Ensure the scroll happened
+                setTimeout(() => {
+                    if (messagesContainer.scrollTop + messagesContainer.clientHeight < messagesContainer.scrollHeight) {
+                        messagesContainer.scrollTo(scrollOptions);
+                    }
+                }, 100);
             }
         }
 
@@ -191,16 +237,37 @@ SessionManager::init();
             messageDiv.innerHTML = content;
             messagesContainer.appendChild(messageDiv);
             
-            // Add highlight effect
-            setTimeout(() => {
+            // Force layout recalculation
+            messageDiv.offsetHeight;
+            
+            // Add visible class for animation
+            requestAnimationFrame(() => {
+                messageDiv.classList.add('visible');
                 messageDiv.classList.add('highlight');
                 scrollToBottom();
+                
                 // Remove highlight after animation
                 setTimeout(() => {
                     messageDiv.classList.remove('highlight');
                 }, 1000);
-            }, 100);
+            });
         }
+
+        // Intersection Observer to handle message visibility
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        // Observe all messages
+        document.querySelectorAll('.message').forEach(message => {
+            observer.observe(message);
+        });
 
         chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -237,6 +304,9 @@ SessionManager::init();
 
         // Initial scroll to bottom
         scrollToBottom(false);
+
+        // Ensure messages container is always scrolled to bottom when window resizes
+        window.addEventListener('resize', () => scrollToBottom(false));
     </script>
 </body>
 </html>
