@@ -12,10 +12,11 @@ SessionManager::init();
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
-            overflow: hidden;
             height: 100vh;
             display: flex;
             flex-direction: column;
+            margin: 0;
+            padding: 0;
         }
         .chat-container {
             flex: 1;
@@ -36,7 +37,7 @@ SessionManager::init();
             scrollbar-width: thin;
             scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
             min-height: 0;
-            height: calc(100vh - 280px); /* Adjusted height calculation */
+            max-height: calc(100vh - 200px);
         }
         .messages-container::-webkit-scrollbar {
             width: 6px;
@@ -142,7 +143,7 @@ SessionManager::init();
             flex-direction: column;
             background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
             overflow: hidden;
-            height: calc(100vh - 40px); /* Adjusted height calculation */
+            height: 100%;
         }
         .logo-container {
             background: white;
