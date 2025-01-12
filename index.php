@@ -1,3 +1,7 @@
+<?php
+require_once 'api/utils/SessionManager.php';
+SessionManager::init();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -60,14 +64,13 @@
         <div class="bg-white rounded-lg p-4 flex-1 flex flex-col">
             <div id="chat-messages" class="flex-1 flex flex-col space-y-4">
                 <?php
-                session_start();
-                if (!isset($_SESSION['messages'])) {
-                    $_SESSION['messages'] = [];
+                $messages = SessionManager::getMessages();
+                if (empty($messages)) {
                     echo '<div class="text-center text-gray-500 text-xl py-20">
                         Mulai mengajukan pertanyaan tentang data BPS Kabupaten Siak
                     </div>';
                 } else {
-                    foreach ($_SESSION['messages'] as $message) {
+                    foreach ($messages as $message) {
                         $class = $message['type'] === 'user' ? 'user-message' : 'ai-message';
                         echo "<div class='message {$class}'>{$message['content']}</div>";
                     }

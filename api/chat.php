@@ -1,9 +1,14 @@
 <?php
-session_start();
+require_once 'config.php';
+require_once 'utils/MessageFormatter.php';
+require_once 'utils/SessionManager.php';
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
+
+SessionManager::init();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $userMessage = $_POST['prompt'] ?? '';
@@ -13,19 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // Store user message in session
-    if (!isset($_SESSION['messages'])) {
-        $_SESSION['messages'] = [];
-    }
-    $_SESSION['messages'][] = [
-        'type' => 'user',
-        'content' => htmlspecialchars($userMessage)
-    ];
+    SessionManager::addMessage('user', htmlspecialchars($userMessage));
 
-    // Process with Gemini API
-    $API_KEY = 'AIzaSyABbRf2u83A-QAGLa9xp4YunF88d18xTIY';
-    $url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
-    
     $history = [
         [
             "role" => "user",
@@ -87,7 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
 
     $ch = curl_init();
-    $fullUrl = $url . '?key=' . $API_KEY;
+    $fullUrl = API_BASE_URL . '?key=' . GEMINI_API_KEY;
     
     curl_setopt_array($ch, [
         CURLOPT_URL => $fullUrl,
@@ -105,35 +99,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $response = curl_exec($ch);
     
     if ($response === false) {
-        $_SESSION['messages'][] = [
-            'type' => 'ai',
-            'content' => 'Maaf, terjadi kesalahan dalam memproses permintaan Anda.'
-        ];
+        SessionManager::addMessage('ai', 'Maaf, terjadi kesalahan dalam memproses permintaan Anda.');
     } else {
         $result = json_decode($response, true);
         $aiResponse = $result['candidates'][0]['content']['parts'][0]['text'] ?? 'Maaf, saya tidak dapat memproses permintaan Anda saat ini.';
         
-        // Format the response
-        $formattedResponse = preg_replace(
-            [
-                '/\*\*(.*?)\*\*/',                // Bold text
-                '/(https?:\/\/[^\s<]+)/',         // URLs
-                '/^\d+\.\s+(.*)$/m',              // Numbered lists
-                '/^-\s+(.*)$/m'                   // Bullet points
-            ],
-            [
-                '<strong>$1</strong>',
-                '<a href="$1" target="_blank" class="text-blue-500 hover:underline">$1</a>',
-                '<ol class="list-decimal list-inside"><li>$1</li></ol>',
-                '<ul class="list-disc list-inside"><li>$1</li></ul>'
-            ],
-            $aiResponse
-        );
-
-        $_SESSION['messages'][] = [
-            'type' => 'ai',
-            'content' => $formattedResponse
-        ];
+        $formattedResponse = MessageFormatter::format($aiResponse);
+        SessionManager::addMessage('ai', $formattedResponse);
     }
 
     curl_close($ch);
