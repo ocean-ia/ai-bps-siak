@@ -10,44 +10,44 @@ SessionManager::init();
     <title>AI Data Assistant BPS Kabupaten Siak</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
-        .sticky-form {
-            position: fixed;
-            bottom: 32px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: white;
-            padding: 1rem;
-            width: 100%;
-            max-width: 896px;
+        .chat-container {
+            height: calc(100vh - 200px);
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
         }
-        .main-content {
-            padding-bottom: 40vh;
+        .messages-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column-reverse;
+            padding: 1rem;
+            gap: 1rem;
         }
         .message {
-            margin-bottom: 1rem;
             padding: 1rem;
             border-radius: 0.5rem;
+            max-width: 80%;
+            word-break: break-word;
         }
         .user-message {
             background-color: #f3f4f6;
             margin-left: auto;
-            margin-right: 2rem;
-            max-width: 80%;
         }
         .ai-message {
             background-color: #e5e7eb;
             margin-right: auto;
-            margin-left: 2rem;
-            max-width: 80%;
+        }
+        .input-container {
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            padding: 1rem;
+            position: sticky;
+            bottom: 0;
         }
     </style>
 </head>
 <body class="bg-white min-h-screen flex flex-col">
-    <div class="container mx-auto max-w-4xl px-4 py-8 flex-1 flex flex-col main-content">
+    <div class="container mx-auto max-w-4xl px-4 py-8 flex-1 flex flex-col">
         <div class="text-center mb-8">
             <div class="flex items-center justify-center mb-4">
                 <img 
@@ -61,8 +61,8 @@ SessionManager::init();
             </h1>
         </div>
 
-        <div class="bg-white rounded-lg p-4 flex-1 flex flex-col">
-            <div id="chat-messages" class="flex-1 flex flex-col space-y-4">
+        <div class="bg-white rounded-lg shadow-lg flex-1 flex flex-col chat-container">
+            <div class="messages-container" id="chat-messages">
                 <?php
                 $messages = SessionManager::getMessages();
                 if (empty($messages)) {
@@ -78,8 +78,8 @@ SessionManager::init();
                 ?>
             </div>
             
-            <form method="POST" action="api/chat.php" class="sticky-form">
-                <div class="flex gap-2 w-full">
+            <div class="input-container">
+                <form method="POST" action="api/chat.php" class="flex gap-2">
                     <input 
                         type="text" 
                         name="prompt" 
@@ -93,12 +93,12 @@ SessionManager::init();
                     >
                         Kirim
                     </button>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 
-    <div class="fixed bottom-0 left-0 w-full text-center py-2 text-sm text-gray-500 bg-white">
+    <div class="text-center py-2 text-sm text-gray-500 bg-white border-t">
         AI Data Assistant dapat membuat kesalahan. Mohon periksa kembali informasi penting.
     </div>
 </body>
