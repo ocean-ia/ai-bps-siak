@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $userMessage = $_POST['prompt'] ?? '';
     
     if (empty($userMessage)) {
-        header("Location: ../index.php");
+        echo json_encode(['error' => 'No message provided']);
         exit();
     }
 
@@ -99,20 +99,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $response = curl_exec($ch);
     
     if ($response === false) {
-        SessionManager::addMessage('ai', 'Maaf, terjadi kesalahan dalam memproses permintaan Anda.');
+        $aiResponse = 'Maaf, terjadi kesalahan dalam memproses permintaan Anda.';
     } else {
         $result = json_decode($response, true);
         $aiResponse = $result['candidates'][0]['content']['parts'][0]['text'] ?? 'Maaf, saya tidak dapat memproses permintaan Anda saat ini.';
-        
-        $formattedResponse = MessageFormatter::format($aiResponse);
-        SessionManager::addMessage('ai', $formattedResponse);
     }
-
+    
+    $formattedResponse = MessageFormatter::format($aiResponse);
+    SessionManager::addMessage('ai', $formattedResponse);
+    
     curl_close($ch);
-    header("Location: ../index.php");
+    
+    echo json_encode(['response' => $formattedResponse]);
     exit();
 }
 
-header("Location: ../index.php");
+echo json_encode(['error' => 'Invalid request method']);
 exit();
 ?>

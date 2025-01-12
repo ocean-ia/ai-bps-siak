@@ -23,7 +23,9 @@ class SessionManager {
     }
 
     public static function clearSession() {
-        session_destroy();
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_destroy();
+        }
         session_start();
         $_SESSION['messages'] = [];
     }

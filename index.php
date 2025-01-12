@@ -1,11 +1,6 @@
 <?php
 require_once 'api/utils/SessionManager.php';
-
-// Clear session if requested
-if (isset($_GET['new'])) {
-    SessionManager::clearSession();
-}
-
+SessionManager::clearSession(); // Always start fresh
 SessionManager::init();
 ?>
 <!DOCTYPE html>
@@ -109,9 +104,6 @@ SessionManager::init();
                         AI Data Assistant BPS Kabupaten Siak
                     </h1>
                 </div>
-                <a href="?new=1" class="px-4 py-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors">
-                    Chat Baru
-                </a>
             </div>
         </div>
     </header>
@@ -136,10 +128,11 @@ SessionManager::init();
             </div>
             
             <div class="input-container">
-                <form method="POST" action="api/chat.php" class="flex gap-2">
+                <form id="chat-form" class="flex gap-2">
                     <input 
                         type="text" 
                         name="prompt" 
+                        id="prompt-input"
                         placeholder="Contoh: Apa itu Badan Pusat Statistik?" 
                         class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
                         required
@@ -160,11 +153,57 @@ SessionManager::init();
     </div>
 
     <script>
-        // Auto-scroll to bottom when new messages arrive
         const messagesContainer = document.getElementById('chat-messages');
-        if (messagesContainer) {
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        const chatForm = document.getElementById('chat-form');
+        const promptInput = document.getElementById('prompt-input');
+
+        function scrollToBottom() {
+            if (messagesContainer) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
         }
+
+        function appendMessage(content, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}-message`;
+            messageDiv.innerHTML = content;
+            messagesContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const prompt = promptInput.value.trim();
+            if (!prompt) return;
+
+            // Add user message immediately
+            appendMessage(prompt, 'user');
+            promptInput.value = '';
+            promptInput.disabled = true;
+
+            try {
+                const formData = new FormData();
+                formData.append('prompt', prompt);
+
+                const response = await fetch('api/chat.php', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                appendMessage(data.response, 'ai');
+            } catch (error) {
+                appendMessage('Maaf, terjadi kesalahan dalam memproses permintaan Anda.', 'ai');
+                console.error('Error:', error);
+            }
+
+            promptInput.disabled = false;
+            promptInput.focus();
+        });
+
+        // Initial scroll to bottom
+        scrollToBottom();
     </script>
 </body>
 </html>
