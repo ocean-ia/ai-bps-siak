@@ -12,7 +12,7 @@ SessionManager::init();
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
-            overflow: hidden; /* Prevent body scrolling */
+            overflow: hidden;
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -22,7 +22,7 @@ SessionManager::init();
             display: flex;
             flex-direction: column;
             position: relative;
-            height: calc(100vh - 140px); /* Adjust for header and footer */
+            height: calc(100vh - 140px);
             overflow: hidden;
         }
         .messages-container {
@@ -34,7 +34,7 @@ SessionManager::init();
             flex-direction: column;
             scroll-behavior: smooth;
             position: relative;
-            margin-bottom: 0;
+            padding-bottom: 60px; /* Space for typing indicator */
         }
         .message {
             padding: 1rem;
@@ -79,6 +79,42 @@ SessionManager::init();
             width: 100%;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
         }
+        .typing-indicator {
+            display: none;
+            padding: 1rem;
+            color: #6b7280;
+            font-style: italic;
+            position: absolute;
+            bottom: 80px;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.9);
+            border-top: 1px solid #e5e7eb;
+            z-index: 10;
+            backdrop-filter: blur(4px);
+        }
+        .typing-indicator.active {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .typing-dots {
+            display: flex;
+            gap: 0.25rem;
+        }
+        .typing-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background-color: #6b7280;
+            animation: typingDot 1.4s infinite ease-in-out;
+        }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingDot {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-4px); }
+        }
         .sticky-header {
             position: sticky;
             top: 0;
@@ -109,40 +145,6 @@ SessionManager::init();
             color: #6b7280;
             text-align: center;
             padding: 2rem;
-        }
-        .typing-indicator {
-            display: none;
-            padding: 1rem;
-            color: #6b7280;
-            font-style: italic;
-            position: absolute;
-            bottom: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border-top: 1px solid #e5e7eb;
-        }
-        .typing-indicator.active {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        .typing-dots {
-            display: flex;
-            gap: 0.25rem;
-        }
-        .typing-dot {
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background-color: #6b7280;
-            animation: typingDot 1.4s infinite ease-in-out;
-        }
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes typingDot {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-4px); }
         }
     </style>
 </head>
@@ -229,7 +231,10 @@ SessionManager::init();
 
         function scrollToBottom(smooth = true) {
             if (messagesContainer) {
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                const lastMessage = messagesContainer.lastElementChild;
+                if (lastMessage) {
+                    lastMessage.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'end' });
+                }
             }
         }
 
@@ -274,6 +279,7 @@ SessionManager::init();
             promptInput.value = '';
             promptInput.disabled = true;
             typingIndicator.classList.add('active');
+            scrollToBottom();
 
             try {
                 const formData = new FormData();
