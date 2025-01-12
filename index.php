@@ -28,16 +28,19 @@ SessionManager::init();
             border-radius: 0.5rem;
             max-width: 80%;
             word-break: break-word;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         .user-message {
             background-color: #e3f2fd;
             margin-left: auto;
             border: 1px solid #90caf9;
+            position: relative;
         }
         .ai-message {
             background-color: #f5f5f5;
             margin-right: auto;
             border: 1px solid #e0e0e0;
+            position: relative;
         }
         .input-container {
             background: white;
@@ -45,6 +48,7 @@ SessionManager::init();
             padding: 1rem;
             position: sticky;
             bottom: 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
         }
         .sticky-header {
             position: fixed;
@@ -58,6 +62,13 @@ SessionManager::init();
         }
         .content-wrapper {
             padding-top: 100px;
+            background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+        }
+        .logo-container {
+            background: white;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
     </style>
 </head>
@@ -65,11 +76,13 @@ SessionManager::init();
     <header class="sticky-header">
         <div class="container mx-auto max-w-4xl px-4 py-4">
             <div class="flex items-center justify-center gap-4">
-                <img 
-                    src="images/bps-siak-logo.png" 
-                    alt="BPS Kabupaten Siak Logo" 
-                    class="h-12 w-auto object-contain"
-                />
+                <div class="logo-container">
+                    <img 
+                        src="images/bps-siak-logo.png" 
+                        alt="BPS Kabupaten Siak Logo" 
+                        class="h-12 w-auto object-contain"
+                    />
+                </div>
                 <h1 class="text-2xl font-bold text-blue-600">
                     AI Data Assistant BPS Kabupaten Siak
                 </h1>
