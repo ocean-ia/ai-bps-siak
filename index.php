@@ -18,10 +18,10 @@ SessionManager::init();
         .messages-container {
             flex-grow: 1;
             overflow-y: auto;
-            display: flex;
-            flex-direction: column-reverse;
             padding: 1rem;
             gap: 1rem;
+            display: flex;
+            flex-direction: column;
         }
         .message {
             padding: 1rem;
@@ -29,6 +29,11 @@ SessionManager::init();
             max-width: 80%;
             word-break: break-word;
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .user-message {
             background-color: #e3f2fd;
@@ -70,6 +75,16 @@ SessionManager::init();
             border-radius: 0.5rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #6b7280;
+            text-align: center;
+            padding: 2rem;
+        }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
@@ -96,8 +111,9 @@ SessionManager::init();
                 <?php
                 $messages = SessionManager::getMessages();
                 if (empty($messages)) {
-                    echo '<div class="text-center text-gray-500 text-xl py-20">
-                        Mulai mengajukan pertanyaan tentang data BPS Kabupaten Siak
+                    echo '<div class="empty-state">
+                        <p class="text-xl mb-2">Mulai mengajukan pertanyaan tentang data BPS Kabupaten Siak</p>
+                        <p class="text-sm">Ketik pertanyaan Anda di bawah ini</p>
                     </div>';
                 } else {
                     foreach ($messages as $message) {
@@ -131,5 +147,13 @@ SessionManager::init();
     <div class="text-center py-2 text-sm text-gray-500 bg-white border-t">
         AI Data Assistant dapat membuat kesalahan. Mohon periksa kembali informasi penting.
     </div>
+
+    <script>
+        // Auto-scroll to bottom when new messages arrive
+        const messagesContainer = document.getElementById('chat-messages');
+        if (messagesContainer) {
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+    </script>
 </body>
 </html>
