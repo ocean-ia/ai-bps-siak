@@ -8,7 +8,7 @@
     <style>
         .sticky-form {
             position: fixed;
-            bottom: 32px; /* Height of the footer */
+            bottom: 32px;
             left: 50%;
             transform: translateX(-50%);
             background: white;
@@ -21,7 +21,24 @@
             align-items: center;
         }
         .main-content {
-            padding-bottom: 40vh; /* Space for form + footer */
+            padding-bottom: 40vh;
+        }
+        .message {
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+        .user-message {
+            background-color: #f3f4f6;
+            margin-left: auto;
+            margin-right: 2rem;
+            max-width: 80%;
+        }
+        .ai-message {
+            background-color: #e5e7eb;
+            margin-right: auto;
+            margin-left: 2rem;
+            max-width: 80%;
         }
     </style>
 </head>
@@ -41,20 +58,31 @@
         </div>
 
         <div class="bg-white rounded-lg p-4 flex-1 flex flex-col">
-            <div id="chat-messages" class="flex-1 flex flex-col justify-center space-y-4">
-                <div id="welcome-message" class="text-center text-gray-500 text-xl py-20">
-                    Mulai mengajukan pertanyaan tentang data BPS Kabupaten Siak
-                </div>
+            <div id="chat-messages" class="flex-1 flex flex-col space-y-4">
+                <?php
+                session_start();
+                if (!isset($_SESSION['messages'])) {
+                    $_SESSION['messages'] = [];
+                    echo '<div class="text-center text-gray-500 text-xl py-20">
+                        Mulai mengajukan pertanyaan tentang data BPS Kabupaten Siak
+                    </div>';
+                } else {
+                    foreach ($_SESSION['messages'] as $message) {
+                        $class = $message['type'] === 'user' ? 'user-message' : 'ai-message';
+                        echo "<div class='message {$class}'>{$message['content']}</div>";
+                    }
+                }
+                ?>
             </div>
             
-            <form id="chat-form" class="flex gap-1 bg-white">
+            <form method="POST" action="api/chat.php" class="sticky-form">
                 <div class="flex gap-2 w-full">
                     <input 
                         type="text" 
-                        id="prompt-input"
                         name="prompt" 
                         placeholder="Contoh: Apa itu Badan Pusat Statistik?" 
                         class="flex-1 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                        required
                     >
                     <button 
                         type="submit" 
@@ -64,12 +92,11 @@
                     </button>
                 </div>
             </form>
-            <div class="fixed bottom-0 left-0 w-full text-center py-2 text-sm text-gray-500 bg-white">
-                AI Data Assistant dapat membuat kesalahan. Mohon periksa kembali informasi penting.
-            </div>
         </div>
     </div>
 
-    <script src="js/chat.js"></script>
+    <div class="fixed bottom-0 left-0 w-full text-center py-2 text-sm text-gray-500 bg-white">
+        AI Data Assistant dapat membuat kesalahan. Mohon periksa kembali informasi penting.
+    </div>
 </body>
 </html>
