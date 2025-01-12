@@ -23,6 +23,7 @@ SessionManager::init();
             gap: 1rem;
             display: flex;
             flex-direction: column;
+            scroll-behavior: smooth;
         }
         .message {
             padding: 1rem;
@@ -31,10 +32,14 @@ SessionManager::init();
             word-break: break-word;
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
             animation: fadeIn 0.3s ease-in-out;
+            transition: background-color 0.3s ease;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        .message.highlight {
+            background-color: #f0f9ff;
         }
         .user-message {
             background-color: #e3f2fd;
@@ -86,6 +91,15 @@ SessionManager::init();
             text-align: center;
             padding: 2rem;
         }
+        .typing-indicator {
+            display: none;
+            padding: 1rem;
+            color: #6b7280;
+            font-style: italic;
+        }
+        .typing-indicator.active {
+            display: block;
+        }
     </style>
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
@@ -127,6 +141,10 @@ SessionManager::init();
                 ?>
             </div>
             
+            <div class="typing-indicator" id="typing-indicator">
+                AI sedang mengetik...
+            </div>
+            
             <div class="input-container">
                 <form id="chat-form" class="flex gap-2">
                     <input 
@@ -156,10 +174,14 @@ SessionManager::init();
         const messagesContainer = document.getElementById('chat-messages');
         const chatForm = document.getElementById('chat-form');
         const promptInput = document.getElementById('prompt-input');
+        const typingIndicator = document.getElementById('typing-indicator');
 
-        function scrollToBottom() {
+        function scrollToBottom(smooth = true) {
             if (messagesContainer) {
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                messagesContainer.scrollTo({
+                    top: messagesContainer.scrollHeight,
+                    behavior: smooth ? 'smooth' : 'auto'
+                });
             }
         }
 
@@ -168,7 +190,16 @@ SessionManager::init();
             messageDiv.className = `message ${type}-message`;
             messageDiv.innerHTML = content;
             messagesContainer.appendChild(messageDiv);
-            scrollToBottom();
+            
+            // Add highlight effect
+            setTimeout(() => {
+                messageDiv.classList.add('highlight');
+                scrollToBottom();
+                // Remove highlight after animation
+                setTimeout(() => {
+                    messageDiv.classList.remove('highlight');
+                }, 1000);
+            }, 100);
         }
 
         chatForm.addEventListener('submit', async (e) => {
@@ -177,10 +208,10 @@ SessionManager::init();
             const prompt = promptInput.value.trim();
             if (!prompt) return;
 
-            // Add user message immediately
             appendMessage(prompt, 'user');
             promptInput.value = '';
             promptInput.disabled = true;
+            typingIndicator.classList.add('active');
 
             try {
                 const formData = new FormData();
@@ -192,8 +223,10 @@ SessionManager::init();
                 });
 
                 const data = await response.json();
+                typingIndicator.classList.remove('active');
                 appendMessage(data.response, 'ai');
             } catch (error) {
+                typingIndicator.classList.remove('active');
                 appendMessage('Maaf, terjadi kesalahan dalam memproses permintaan Anda.', 'ai');
                 console.error('Error:', error);
             }
@@ -203,7 +236,7 @@ SessionManager::init();
         });
 
         // Initial scroll to bottom
-        scrollToBottom();
+        scrollToBottom(false);
     </script>
 </body>
 </html>
