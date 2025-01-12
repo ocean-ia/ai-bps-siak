@@ -6,6 +6,8 @@ class SessionManager {
         }
         if (!isset($_SESSION['messages'])) {
             $_SESSION['messages'] = [];
+            // Add welcome message for new sessions
+            self::addMessage('ai', 'Halo Sahabat Data!<br><br>Selamat datang di layanan Statistik BPS Kabupaten Siak.<br><br>Sahabat Data dapat bertanya seputar data statistik di BPS Kabupaten Siak.');
         }
     }
 
@@ -18,6 +20,12 @@ class SessionManager {
 
     public static function getMessages() {
         return $_SESSION['messages'] ?? [];
+    }
+
+    public static function clearSession() {
+        session_destroy();
+        session_start();
+        $_SESSION['messages'] = [];
     }
 }
 ?>

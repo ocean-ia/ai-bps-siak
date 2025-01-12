@@ -1,5 +1,11 @@
 <?php
 require_once 'api/utils/SessionManager.php';
+
+// Clear session if requested
+if (isset($_GET['new'])) {
+    SessionManager::clearSession();
+}
+
 SessionManager::init();
 ?>
 <!DOCTYPE html>
@@ -90,17 +96,22 @@ SessionManager::init();
 <body class="bg-gray-50 min-h-screen flex flex-col">
     <header class="sticky-header">
         <div class="container mx-auto max-w-4xl px-4 py-4">
-            <div class="flex items-center justify-center gap-4">
-                <div class="logo-container">
-                    <img 
-                        src="images/bps-siak-logo.png" 
-                        alt="BPS Kabupaten Siak Logo" 
-                        class="h-12 w-auto object-contain"
-                    />
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="logo-container">
+                        <img 
+                            src="images/bps-siak-logo.png" 
+                            alt="BPS Kabupaten Siak Logo" 
+                            class="h-12 w-auto object-contain"
+                        />
+                    </div>
+                    <h1 class="text-2xl font-bold text-blue-600">
+                        AI Data Assistant BPS Kabupaten Siak
+                    </h1>
                 </div>
-                <h1 class="text-2xl font-bold text-blue-600">
-                    AI Data Assistant BPS Kabupaten Siak
-                </h1>
+                <a href="?new=1" class="px-4 py-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition-colors">
+                    Chat Baru
+                </a>
             </div>
         </div>
     </header>
