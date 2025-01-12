@@ -22,7 +22,7 @@ SessionManager::init();
             display: flex;
             flex-direction: column;
             position: relative;
-            height: calc(100vh - 140px);
+            overflow: hidden;
         }
         .messages-container {
             flex: 1;
@@ -36,8 +36,6 @@ SessionManager::init();
             padding-bottom: 80px;
             scrollbar-width: thin;
             scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
-            min-height: 0; /* This ensures proper scrolling */
-            max-height: 100%; /* This ensures the container doesn't overflow */
         }
         .messages-container::-webkit-scrollbar {
             width: 6px;
@@ -143,6 +141,7 @@ SessionManager::init();
             flex-direction: column;
             background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
             overflow: hidden;
+            height: calc(100vh - 140px);
         }
         .logo-container {
             background: white;
