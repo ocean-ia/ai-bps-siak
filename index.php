@@ -33,9 +33,11 @@ SessionManager::init();
             flex-direction: column;
             scroll-behavior: smooth;
             position: relative;
-            padding-bottom: 80px; /* Increased space for typing indicator */
+            padding-bottom: 80px;
             scrollbar-width: thin;
             scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+            min-height: 0; /* This ensures proper scrolling */
+            max-height: 100%; /* This ensures the container doesn't overflow */
         }
         .messages-container::-webkit-scrollbar {
             width: 6px;
@@ -245,7 +247,10 @@ SessionManager::init();
             if (messagesContainer) {
                 const lastMessage = messagesContainer.lastElementChild;
                 if (lastMessage) {
-                    lastMessage.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto', block: 'end' });
+                    lastMessage.scrollIntoView({ 
+                        behavior: smooth ? 'smooth' : 'auto', 
+                        block: 'end'
+                    });
                 }
             }
         }
