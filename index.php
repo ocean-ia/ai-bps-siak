@@ -23,7 +23,6 @@ SessionManager::init();
             flex-direction: column;
             position: relative;
             height: calc(100vh - 140px);
-            overflow: hidden;
         }
         .messages-container {
             flex: 1;
@@ -34,7 +33,19 @@ SessionManager::init();
             flex-direction: column;
             scroll-behavior: smooth;
             position: relative;
-            padding-bottom: 60px; /* Space for typing indicator */
+            padding-bottom: 80px; /* Increased space for typing indicator */
+            scrollbar-width: thin;
+            scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+        }
+        .messages-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .messages-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .messages-container::-webkit-scrollbar-thumb {
+            background-color: rgba(156, 163, 175, 0.5);
+            border-radius: 3px;
         }
         .message {
             padding: 1rem;
@@ -78,6 +89,7 @@ SessionManager::init();
             bottom: 0;
             width: 100%;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            z-index: 20;
         }
         .typing-indicator {
             display: none;
