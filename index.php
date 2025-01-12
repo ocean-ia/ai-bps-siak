@@ -11,14 +11,22 @@ SessionManager::init();
     <title>AI Data Assistant BPS Kabupaten Siak</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
+        body {
+            overflow: hidden; /* Prevent body scrolling */
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
         .chat-container {
-            height: calc(100vh - 200px);
+            flex: 1;
             display: flex;
             flex-direction: column;
             position: relative;
+            height: calc(100vh - 140px); /* Adjust for header and footer */
+            overflow: hidden;
         }
         .messages-container {
-            flex-grow: 1;
+            flex: 1;
             overflow-y: auto;
             padding: 1rem;
             gap: 1rem;
@@ -26,6 +34,7 @@ SessionManager::init();
             flex-direction: column;
             scroll-behavior: smooth;
             position: relative;
+            margin-bottom: 0;
         }
         .message {
             padding: 1rem;
@@ -67,21 +76,23 @@ SessionManager::init();
             padding: 1rem;
             position: sticky;
             bottom: 0;
+            width: 100%;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
         }
         .sticky-header {
-            position: fixed;
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
             background: white;
             z-index: 50;
             border-bottom: 1px solid #e5e7eb;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .content-wrapper {
-            padding-top: 100px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+            overflow: hidden;
         }
         .logo-container {
             background: white;
@@ -99,17 +110,17 @@ SessionManager::init();
             text-align: center;
             padding: 2rem;
         }
-
         .typing-indicator {
             display: none;
             padding: 1rem;
             color: #6b7280;
             font-style: italic;
-            position: sticky;
-            bottom: 0;
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
             background: white;
             border-top: 1px solid #e5e7eb;
-            margin-top: auto;
         }
         .typing-indicator.active {
             display: flex;
@@ -135,7 +146,7 @@ SessionManager::init();
         }
     </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
+<body>
     <header class="sticky-header">
         <div class="container mx-auto max-w-4xl px-4 py-4">
             <div class="flex items-center justify-between">
@@ -155,51 +166,53 @@ SessionManager::init();
         </div>
     </header>
 
-    <div class="container mx-auto max-w-4xl px-4 flex-1 flex flex-col content-wrapper">
-        <div class="bg-white rounded-lg shadow-lg flex-1 flex flex-col chat-container">
-            <div class="messages-container" id="chat-messages">
-                <?php
-                $messages = SessionManager::getMessages();
-                if (empty($messages)) {
-                    echo '<div class="empty-state">
-                        <p class="text-xl mb-2">Mulai mengajukan pertanyaan tentang data BPS Kabupaten Siak</p>
-                        <p class="text-sm">Ketik pertanyaan Anda di bawah ini</p>
-                    </div>';
-                } else {
-                    foreach ($messages as $message) {
-                        $class = $message['type'] === 'user' ? 'user-message' : 'ai-message';
-                        echo "<div class='message {$class} visible'>{$message['content']}</div>";
+    <div class="content-wrapper">
+        <div class="container mx-auto max-w-4xl px-4 flex-1 flex flex-col">
+            <div class="bg-white rounded-lg shadow-lg flex-1 flex flex-col chat-container">
+                <div class="messages-container" id="chat-messages">
+                    <?php
+                    $messages = SessionManager::getMessages();
+                    if (empty($messages)) {
+                        echo '<div class="empty-state">
+                            <p class="text-xl mb-2">Mulai mengajukan pertanyaan tentang data BPS Kabupaten Siak</p>
+                            <p class="text-sm">Ketik pertanyaan Anda di bawah ini</p>
+                        </div>';
+                    } else {
+                        foreach ($messages as $message) {
+                            $class = $message['type'] === 'user' ? 'user-message' : 'ai-message';
+                            echo "<div class='message {$class} visible'>{$message['content']}</div>";
+                        }
                     }
-                }
-                ?>
-            </div>
-            
-            <div class="typing-indicator" id="typing-indicator">
-                AI sedang mengetik...
-                <div class="typing-dots">
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
-                    <div class="typing-dot"></div>
+                    ?>
                 </div>
-            </div>
-            
-            <div class="input-container">
-                <form id="chat-form" class="flex gap-2">
-                    <input 
-                        type="text" 
-                        name="prompt" 
-                        id="prompt-input"
-                        placeholder="Contoh: Apa itu Badan Pusat Statistik?" 
-                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-                        required
-                    >
-                    <button 
-                        type="submit" 
-                        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                    >
-                        Kirim
-                    </button>
-                </form>
+                
+                <div class="typing-indicator" id="typing-indicator">
+                    AI sedang mengetik...
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+                
+                <div class="input-container">
+                    <form id="chat-form" class="flex gap-2">
+                        <input 
+                            type="text" 
+                            name="prompt" 
+                            id="prompt-input"
+                            placeholder="Contoh: Apa itu Badan Pusat Statistik?" 
+                            class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                            required
+                        >
+                        <button 
+                            type="submit" 
+                            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                        >
+                            Kirim
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -216,18 +229,7 @@ SessionManager::init();
 
         function scrollToBottom(smooth = true) {
             if (messagesContainer) {
-                const scrollOptions = {
-                    top: messagesContainer.scrollHeight,
-                    behavior: smooth ? 'smooth' : 'auto'
-                };
-                messagesContainer.scrollTo(scrollOptions);
-                
-                // Ensure the scroll happened
-                setTimeout(() => {
-                    if (messagesContainer.scrollTop + messagesContainer.clientHeight < messagesContainer.scrollHeight) {
-                        messagesContainer.scrollTo(scrollOptions);
-                    }
-                }, 100);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }
         }
 
@@ -237,23 +239,17 @@ SessionManager::init();
             messageDiv.innerHTML = content;
             messagesContainer.appendChild(messageDiv);
             
-            // Force layout recalculation
-            messageDiv.offsetHeight;
-            
-            // Add visible class for animation
             requestAnimationFrame(() => {
                 messageDiv.classList.add('visible');
                 messageDiv.classList.add('highlight');
                 scrollToBottom();
                 
-                // Remove highlight after animation
                 setTimeout(() => {
                     messageDiv.classList.remove('highlight');
                 }, 1000);
             });
         }
 
-        // Intersection Observer to handle message visibility
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -264,7 +260,6 @@ SessionManager::init();
             threshold: 0.1
         });
 
-        // Observe all messages
         document.querySelectorAll('.message').forEach(message => {
             observer.observe(message);
         });
@@ -302,10 +297,7 @@ SessionManager::init();
             promptInput.focus();
         });
 
-        // Initial scroll to bottom
         scrollToBottom(false);
-
-        // Ensure messages container is always scrolled to bottom when window resizes
         window.addEventListener('resize', () => scrollToBottom(false));
     </script>
 </body>
