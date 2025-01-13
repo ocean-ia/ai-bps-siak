@@ -98,35 +98,18 @@ SessionManager::init();
             padding: 1rem;
             color: #6b7280;
             font-style: italic;
-            position: fixed; /* Changed from absolute to fixed */
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid #e5e7eb;
+            margin-left: 1rem;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
             border-radius: 0.5rem;
-            z-index: 30; /* Increased z-index */
-            backdrop-filter: blur(4px);
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            max-width: 90%;
-            width: auto;
-            margin: 0 auto;
+            width: fit-content;
+            max-width: 80%;
+            position: relative;
+            margin-bottom: 1rem;
         }
         .typing-indicator.active {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            animation: slideUp 0.3s ease-out;
-        }
-        @keyframes slideUp {
-            from {
-                transform: translate(-50%, 20px);
-                opacity: 0;
-            }
-            to {
-                transform: translate(-50%, 0);
-                opacity: 1;
-            }
+            display: block;
+            animation: fadeIn 0.3s ease-out;
         }
         .sticky-header {
             position: sticky;
