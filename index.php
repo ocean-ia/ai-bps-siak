@@ -112,6 +112,8 @@ SessionManager::init();
             opacity: 0;
             transform: translateY(10px);
             transition: opacity 0.3s ease, transform 0.3s ease;
+            backdrop-filter: blur(8px);
+            background-color: rgba(245, 245, 245, 0.95);
         }
         .typing-indicator.active {
             display: flex;
