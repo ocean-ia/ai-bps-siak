@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    $formattedResponse = MessageFormatter::format($aiResponse);
+    $formattedResponse = AIMessageFormatter::format($aiResponse);
     SessionManager::addMessage('ai', $formattedResponse);
     
     curl_close($ch);

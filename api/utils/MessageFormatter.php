@@ -1,5 +1,5 @@
 <?php
-class MessageFormatter {
+class AIMessageFormatter {
     public static function format($response) {
         // Convert markdown to HTML
         $formatted = preg_replace(
