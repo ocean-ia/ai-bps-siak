@@ -83,6 +83,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ch = curl_init();
     $fullUrl = API_BASE_URL . '?key=' . GEMINI_API_KEY;
     
+    // Enable error reporting for CURL
+    curl_setopt($ch, CURLOPT_VERBOSE, true);
+    $verbose = fopen('php://temp', 'w+');
+    curl_setopt($ch, CURLOPT_STDERR, $verbose);
+    
     curl_setopt_array($ch, [
         CURLOPT_URL => $fullUrl,
         CURLOPT_RETURNTRANSFER => true,
@@ -93,22 +98,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'Accept: application/json'
         ],
         CURLOPT_SSL_VERIFYPEER => false,
-        CURLOPT_SSL_VERIFYHOST => 0
+        CURLOPT_SSL_VERIFYHOST => 0,
+        CURLOPT_TIMEOUT => 30
     ]);
 
     $response = curl_exec($ch);
     
     if ($response === false) {
-        $aiResponse = 'Maaf, terjadi kesalahan dalam memproses permintaan Anda.';
+        $error = curl_error($ch);
+        $errorNo = curl_errno($ch);
+        
+        // Get verbose information
+        rewind($verbose);
+        $verboseLog = stream_get_contents($verbose);
+        
+        // Log the error
+        error_log("CURL Error ($errorNo): $error");
+        error_log("Verbose information: " . $verboseLog);
+        
+        $aiResponse = "Maaf, terjadi kesalahan dalam memproses permintaan Anda. Error: " . $error;
     } else {
-        $result = json_decode($response, true);
-        $aiResponse = $result['candidates'][0]['content']['parts'][0]['text'] ?? 'Maaf, saya tidak dapat memproses permintaan Anda saat ini.';
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        
+        if ($httpCode !== 200) {
+            error_log("HTTP Error: $httpCode, Response: $response");
+            $aiResponse = "Maaf, terjadi kesalahan dalam memproses permintaan Anda. HTTP Code: " . $httpCode;
+        } else {
+            $result = json_decode($response, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                error_log("JSON Decode Error: " . json_last_error_msg());
+                $aiResponse = "Maaf, terjadi kesalahan dalam memproses format response.";
+            } else {
+                $aiResponse = $result['candidates'][0]['content']['parts'][0]['text'] ?? 'Maaf, saya tidak dapat memproses permintaan Anda saat ini.';
+            }
+        }
     }
     
     $formattedResponse = MessageFormatter::format($aiResponse);
     SessionManager::addMessage('ai', $formattedResponse);
     
     curl_close($ch);
+    fclose($verbose);
     
     echo json_encode(['response' => $formattedResponse]);
     exit();
