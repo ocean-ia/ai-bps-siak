@@ -33,7 +33,7 @@ SessionManager::init();
             flex-direction: column;
             scroll-behavior: smooth;
             position: relative;
-            padding-bottom: 80px;
+            padding-bottom: 100px; /* Increased padding to prevent overlap */
             scrollbar-width: thin;
             scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
             min-height: 0;
@@ -98,36 +98,35 @@ SessionManager::init();
             padding: 1rem;
             color: #6b7280;
             font-style: italic;
-            position: absolute;
+            position: fixed; /* Changed from absolute to fixed */
             bottom: 80px;
-            left: 0;
-            right: 0;
+            left: 50%;
+            transform: translateX(-50%);
             background: rgba(255, 255, 255, 0.9);
-            border-top: 1px solid #e5e7eb;
-            z-index: 10;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            z-index: 30; /* Increased z-index */
             backdrop-filter: blur(4px);
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            max-width: 90%;
+            width: auto;
+            margin: 0 auto;
         }
         .typing-indicator.active {
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            animation: slideUp 0.3s ease-out;
         }
-        .typing-dots {
-            display: flex;
-            gap: 0.25rem;
-        }
-        .typing-dot {
-            width: 4px;
-            height: 4px;
-            border-radius: 50%;
-            background-color: #6b7280;
-            animation: typingDot 1.4s infinite ease-in-out;
-        }
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes typingDot {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-4px); }
+        @keyframes slideUp {
+            from {
+                transform: translate(-50%, 20px);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
         }
         .sticky-header {
             position: sticky;
