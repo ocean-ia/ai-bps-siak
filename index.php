@@ -98,18 +98,51 @@ SessionManager::init();
             padding: 1rem;
             color: #6b7280;
             font-style: italic;
-            margin-left: 1rem;
+            margin: 1rem;
             background: #f5f5f5;
             border: 1px solid #e0e0e0;
             border-radius: 0.5rem;
             width: fit-content;
             max-width: 80%;
-            position: relative;
-            margin-bottom: 1rem;
+            position: absolute;
+            bottom: 80px;
+            left: 0;
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
         }
         .typing-indicator.active {
-            display: block;
-            animation: fadeIn 0.3s ease-out;
+            display: flex;
+            align-items: center;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .typing-dots {
+            display: flex;
+            margin-left: 8px;
+            gap: 4px;
+        }
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #6b7280;
+            border-radius: 50%;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingAnimation {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.4;
+            }
+            30% {
+                transform: translateY(-4px);
+                opacity: 1;
+            }
         }
         .sticky-header {
             position: sticky;
@@ -186,7 +219,7 @@ SessionManager::init();
                 </div>
                 
                 <div class="typing-indicator" id="typing-indicator">
-                    AI sedang mengetik...
+                    <span>AI sedang mengetik</span>
                     <div class="typing-dots">
                         <div class="typing-dot"></div>
                         <div class="typing-dot"></div>
