@@ -59,39 +59,38 @@ SessionManager::init();
             transition: all 0.3s ease;
             opacity: 0;
             transform: translateY(20px);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
         }
         .message.visible {
             opacity: 1;
             transform: translateY(0);
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .message-content {
+            flex: 1;
         }
-        .message.highlight {
-            background-color: #f0f9ff;
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            object-fit: cover;
+            border: 2px solid #fff;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
         .user-message {
             background-color: #e3f2fd;
             margin-left: auto;
             border: 1px solid #90caf9;
             position: relative;
+            flex-direction: row-reverse;
         }
         .ai-message {
             background-color: #f5f5f5;
             margin-right: auto;
             border: 1px solid #e0e0e0;
             position: relative;
-        }
-        .input-container {
-            background: white;
-            border-top: 1px solid #e5e7eb;
-            padding: 1rem;
-            position: sticky;
-            bottom: 0;
-            width: 100%;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
-            z-index: 20;
         }
         .typing-indicator {
             display: none;
@@ -197,7 +196,11 @@ SessionManager::init();
                     } else {
                         foreach ($messages as $message) {
                             $class = $message['type'] === 'user' ? 'user-message' : 'ai-message';
-                            echo "<div class='message {$class} visible'>{$message['content']}</div>";
+                            $avatar = $message['type'] === 'ai' ? '<img src="images/dara-avatar.png" alt="Dara AI" class="avatar">' : '';
+                            echo "<div class='message {$class} visible'>
+                                    {$avatar}
+                                    <div class='message-content'>{$message['content']}</div>
+                                  </div>";
                         }
                     }
                     ?>
@@ -259,7 +262,20 @@ SessionManager::init();
         function appendMessage(content, type) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${type}-message`;
-            messageDiv.innerHTML = content;
+            
+            if (type === 'ai') {
+                const avatar = document.createElement('img');
+                avatar.src = 'images/dara-avatar.png';
+                avatar.alt = 'Dara AI';
+                avatar.className = 'avatar';
+                messageDiv.appendChild(avatar);
+            }
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.innerHTML = content;
+            messageDiv.appendChild(contentDiv);
+            
             messagesContainer.appendChild(messageDiv);
             
             requestAnimationFrame(() => {
