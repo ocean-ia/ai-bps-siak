@@ -77,6 +77,7 @@ SessionManager::init();
             object-fit: cover;
             border: 2px solid #fff;
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            background-color: #f5f5f5;
         }
         .user-message {
             background-color: #e3f2fd;
@@ -204,7 +205,7 @@ SessionManager::init();
                     } else {
                         foreach ($messages as $message) {
                             $class = $message['type'] === 'user' ? 'user-message' : 'ai-message';
-                            $avatar = $message['type'] === 'ai' ? '<img src="images/dara-avatar.png" alt="Dara AI" class="avatar">' : '';
+                            $avatar = $message['type'] === 'ai' ? '<img src="images/default-avatar.png" alt="Dara AI" class="avatar">' : '';
                             echo "<div class='message {$class} visible'>
                                     {$avatar}
                                     <div class='message-content'>{$message['content']}</div>
@@ -273,7 +274,7 @@ SessionManager::init();
             
             if (type === 'ai') {
                 const avatar = document.createElement('img');
-                avatar.src = 'images/dara-avatar.png';
+                avatar.src = 'images/default-avatar.png';
                 avatar.alt = 'Dara AI';
                 avatar.className = 'avatar';
                 messageDiv.appendChild(avatar);
