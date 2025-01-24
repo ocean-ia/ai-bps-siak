@@ -59,22 +59,21 @@ SessionManager::init();
             transition: all 0.3s ease;
             opacity: 0;
             transform: translateY(20px);
-            display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
+            position: relative;
+            margin: 1rem 0;
         }
         .message.visible {
             opacity: 1;
             transform: translateY(0);
         }
         .message-content {
-            flex: 1;
+            width: 100%;
         }
         .avatar {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            flex-shrink: 0;
+            position: absolute;
             object-fit: cover;
             border: 2px solid #fff;
             box-shadow: 0 1px 2px rgba(0,0,0,0.1);
@@ -84,13 +83,22 @@ SessionManager::init();
             margin-left: auto;
             border: 1px solid #90caf9;
             position: relative;
-            flex-direction: row-reverse;
+            margin-right: 1rem;
+        }
+        .user-message .avatar {
+            right: -50px;
+            top: 0;
         }
         .ai-message {
             background-color: #f5f5f5;
             margin-right: auto;
             border: 1px solid #e0e0e0;
             position: relative;
+            margin-left: 50px;
+        }
+        .ai-message .avatar {
+            left: -50px;
+            top: 0;
         }
         .typing-indicator {
             display: none;
@@ -280,12 +288,7 @@ SessionManager::init();
             
             requestAnimationFrame(() => {
                 messageDiv.classList.add('visible');
-                messageDiv.classList.add('highlight');
                 scrollToBottom();
-                
-                setTimeout(() => {
-                    messageDiv.classList.remove('highlight');
-                }, 1000);
             });
         }
 
