@@ -17,12 +17,15 @@ SessionManager::init();
             flex-direction: column;
             margin: 0;
             padding: 0;
+            width: 100%;
         }
         .chat-container {
             flex: 1;
             display: flex;
             flex-direction: column;
             position: relative;
+            width: 100%;
+            max-width: 100%;
         }
         .messages-container {
             flex: 1;
@@ -37,7 +40,8 @@ SessionManager::init();
             scrollbar-width: thin;
             scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
             min-height: 0;
-            max-height: calc(100vh - 200px);
+            max-height: calc(100vh - 160px);
+            width: 100%;
         }
         .messages-container::-webkit-scrollbar {
             width: 6px;
@@ -144,12 +148,17 @@ SessionManager::init();
             z-index: 50;
             border-bottom: 1px solid #e5e7eb;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 0.5rem 0;
+            padding: 0.75rem 0;
+            width: 100%;
         }
         .header-title {
-            font-size: 1.25rem;
+            font-size: 1.125rem;
             color: #2563eb;
             font-weight: 600;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
         }
         .logo-container img {
             height: 2.5rem;
@@ -163,6 +172,7 @@ SessionManager::init();
             background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
             overflow: hidden;
             height: 100%;
+            width: 100%;
         }
         .empty-state {
             display: flex;
@@ -174,11 +184,25 @@ SessionManager::init();
             text-align: center;
             padding: 2rem;
         }
+        .input-container {
+            padding: 1rem;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            position: sticky;
+            bottom: 0;
+            width: 100%;
+        }
+        .container {
+            width: 100%;
+            max-width: 100%;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
     </style>
 </head>
 <body>
     <header class="sticky-header">
-        <div class="container mx-auto max-w-4xl px-4">
+        <div class="container mx-auto px-4">
             <div class="flex items-center justify-between">
                 <div class="logo-container">
                     <img 
@@ -195,8 +219,8 @@ SessionManager::init();
     </header>
 
     <div class="content-wrapper">
-        <div class="container mx-auto max-w-4xl px-4 flex-1 flex flex-col">
-            <div class="bg-white rounded-lg shadow-lg flex-1 flex flex-col chat-container">
+        <div class="container mx-auto px-4 flex-1 flex flex-col">
+            <div class="bg-white shadow-lg flex-1 flex flex-col chat-container">
                 <div class="messages-container" id="chat-messages">
                     <?php
                     $messages = SessionManager::getMessages();
@@ -249,7 +273,7 @@ SessionManager::init();
         </div>
     </div>
 
-    <div class="text-center py-2 text-sm text-gray-500 bg-white border-t">
+    <div class="text-center py-2 text-sm text-gray-500 bg-white border-t w-full">
         AI Data Assistant dapat membuat kesalahan. Mohon periksa kembali informasi penting.
     </div>
 
