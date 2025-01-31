@@ -145,6 +145,16 @@ SessionManager::init();
             border-bottom: 1px solid #e5e7eb;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
+        .header-title {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 60;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
         .content-wrapper {
             flex: 1;
             display: flex;
@@ -186,9 +196,9 @@ SessionManager::init();
 
     <header class="sticky-header">
         <div class="container mx-auto max-w-4xl px-4 py-4">
-            <div class="flex items-center justify-center">
-                <h1 class="text-2xl font-bold text-blue-600">
-                    AI Data Assistant BPS Kabupaten Siak
+            <div class="flex items-center justify-end">
+                <h1 class="text-2xl font-bold text-blue-600 header-title">
+                    Data Assistant and Response AI
                 </h1>
             </div>
         </div>
