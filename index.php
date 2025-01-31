@@ -154,10 +154,14 @@ SessionManager::init();
             height: 100%;
         }
         .logo-container {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 60;
             background: white;
             padding: 0.5rem;
             border-radius: 0.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .empty-state {
             display: flex;
@@ -172,21 +176,20 @@ SessionManager::init();
     </style>
 </head>
 <body>
+    <div class="logo-container">
+        <img 
+            src="images/bps-siak-logo.png" 
+            alt="BPS Kabupaten Siak Logo" 
+            class="h-12 w-auto object-contain"
+        />
+    </div>
+
     <header class="sticky-header">
         <div class="container mx-auto max-w-4xl px-4 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <div class="logo-container">
-                        <img 
-                            src="images/bps-siak-logo.png" 
-                            alt="BPS Kabupaten Siak Logo" 
-                            class="h-12 w-auto object-contain"
-                        />
-                    </div>
-                    <h1 class="text-2xl font-bold text-blue-600">
-                        AI Data Assistant BPS Kabupaten Siak
-                    </h1>
-                </div>
+            <div class="flex items-center justify-center">
+                <h1 class="text-2xl font-bold text-blue-600">
+                    AI Data Assistant BPS Kabupaten Siak
+                </h1>
             </div>
         </div>
     </header>
