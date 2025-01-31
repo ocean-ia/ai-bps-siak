@@ -76,8 +76,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]
     ];
 
-    // ... keep existing code (CURL request and response handling)
-
     $ch = curl_init();
     $fullUrl = API_BASE_URL . '?key=' . GEMINI_API_KEY;
     
