@@ -144,16 +144,17 @@ SessionManager::init();
             z-index: 50;
             border-bottom: 1px solid #e5e7eb;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 0.5rem 0;
         }
         .header-title {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            z-index: 60;
-            background: white;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 1.25rem;
+            color: #2563eb;
+            font-weight: 600;
+        }
+        .logo-container img {
+            height: 2.5rem;
+            width: auto;
+            object-fit: contain;
         }
         .content-wrapper {
             flex: 1;
@@ -177,16 +178,16 @@ SessionManager::init();
 </head>
 <body>
     <header class="sticky-header">
-        <div class="container mx-auto max-w-4xl px-4 py-4">
+        <div class="container mx-auto max-w-4xl px-4">
             <div class="flex items-center justify-between">
                 <div class="logo-container">
                     <img 
                         src="images/bps-siak-logo.png" 
                         alt="BPS Kabupaten Siak Logo" 
-                        class="h-12 w-auto object-contain"
+                        class="h-10"
                     />
                 </div>
-                <h1 class="text-2xl font-bold text-blue-600 header-title">
+                <h1 class="header-title">
                     Data Assistant and Response AI
                 </h1>
             </div>
