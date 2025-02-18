@@ -24,9 +24,8 @@ switch ($path) {
         require_once 'api/chat.php';
         break;
     default:
-        // Halaman tidak ditemukan
-        http_response_code(404);
-        echo json_encode(['error' => 'Not Found']);
+        // Jika bukan API request, tampilkan halaman HTML
+        include 'index.html';
         break;
 }
 ?>
