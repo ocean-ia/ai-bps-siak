@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DARA - Data Assistant and Response AI BPS Kabupaten Siak</title>
+    <meta name="description" content="DARA - Asisten Data dan Respon AI BPS Kabupaten Siak">
+    <meta property="og:title" content="DARA - Data Assistant and Response AI BPS Kabupaten Siak">
+    <meta property="og:description" content="Asisten virtual yang siap membantu Anda menemukan data dan informasi statistik dari BPS Kabupaten Siak">
+    <meta property="og:image" content="images/og-image.png">
+    <link rel="icon" type="image/x-icon" href="images/favicon_bps.png">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm">
+            <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+                <div class="flex items-center space-x-2">
+                    <img src="images/bps-siak-logo.png" alt="Logo BPS Siak" class="h-12">
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-800">DARA</h1>
+                        <p class="text-sm text-gray-600">Data Assistant and Response AI</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-8">
+            <div class="max-w-4xl mx-auto">
+                <!-- Chat Container -->
+                <div class="bg-white rounded-lg shadow-md p-4 min-h-[600px] flex flex-col">
+                    <!-- Chat Messages -->
+                    <div id="chat-messages" class="flex-1 overflow-y-auto mb-4 space-y-4">
+                        <!-- Messages will be inserted here -->
+                    </div>
+
+                    <!-- Input Form -->
+                    <form id="chat-form" class="flex space-x-2">
+                        <input 
+                            type="text" 
+                            id="user-input"
+                            class="flex-1 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Ketik pesan Anda di sini..."
+                            required
+                        >
+                        <button 
+                            type="submit"
+                            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                            Kirim
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="bg-white shadow-sm mt-8">
+            <div class="container mx-auto px-4 py-4 text-center text-gray-600 text-sm">
+                <p>&copy; 2024 BPS Kabupaten Siak. All rights reserved.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Chat JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatForm = document.getElementById('chat-form');
+            const userInput = document.getElementById('user-input');
+            const chatMessages = document.getElementById('chat-messages');
+
+            // Add initial greeting
+            addMessage('ai', 'Halo! Saya Dara, Data Assistant and Response AI BPS Kabupaten Siak. Saya siap membantu Anda dalam mencari data dan informasi statistik seputar BPS Kabupaten Siak. Apakah ada yang dapat saya bantu?');
+
+            chatForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const message = userInput.value.trim();
+                if (!message) return;
+
+                // Add user message to chat
+                addMessage('user', message);
+                
+                // Clear input
+                userInput.value = '';
+
+                try {
+                    // Send message to PHP backend
+                    const response = await fetch('/api/chat', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: `prompt=${encodeURIComponent(message)}`
+                    });
+
+                    const data = await response.json();
+                    
+                    // Add AI response to chat
+                    if (data.response) {
+                        addMessage('ai', data.response);
+                    } else {
+                        addMessage('ai', 'Maaf, terjadi kesalahan dalam memproses permintaan Anda.');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    addMessage('ai', 'Maaf, terjadi kesalahan dalam memproses permintaan Anda.');
+                }
+            });
+
+            function addMessage(type, text) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `flex ${type === 'user' ? 'justify-end' : 'justify-start'}`;
+
+                const contentDiv = document.createElement('div');
+                contentDiv.className = `max-w-[80%] ${type === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-800'} rounded-lg px-4 py-2`;
+                
+                const avatar = document.createElement('img');
+                avatar.src = type === 'user' ? 'images/default-avatar.png' : 'images/dara-avatar.png';
+                avatar.alt = type === 'user' ? 'User Avatar' : 'Dara Avatar';
+                avatar.className = 'w-8 h-8 rounded-full';
+
+                const messageContent = document.createElement('div');
+                messageContent.className = 'flex items-start space-x-2';
+                
+                if (type === 'ai') {
+                    messageContent.appendChild(avatar);
+                }
+                
+                contentDiv.textContent = text;
+                messageContent.appendChild(contentDiv);
+                
+                if (type === 'user') {
+                    messageContent.appendChild(avatar);
+                }
+                
+                messageDiv.appendChild(messageContent);
+                chatMessages.appendChild(messageDiv);
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        });
+    </script>
+</body>
+</html>
