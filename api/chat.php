@@ -21,80 +21,92 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     SessionManager::addMessage('user', htmlspecialchars($userMessage));
 
-    $history = [
-        [
-            "role" => "user",
-            "parts" => [["text" => "Anda adalah program AI yang dikembangkan untuk membantu pengguna data bps kabupaten siak dalam mencari data dan informasi statistik. Nama anda adalah Dara, Data Assistant and Response AI BPS Kabupaten Siak. Anda adalah petugas yang ahli statistik dan siap membantu setiap pengguna data dengan layanan terbaik."]]
-        ],
-        [
-            "role" => "model",
-            "parts" => [["text" => "Halo! Saya Dara, Data Assistant and Response AI BPS Kabupaten Siak. Senang sekali bisa membantu Anda menemukan data dan informasi statistik yang Anda butuhkan dari BPS Kabupaten Siak. Sebagai petugas ahli statistik, saya siap memberikan layanan terbaik. Silakan sampaikan pertanyaan atau kebutuhan data Anda secara detail agar saya dapat memberikan informasi yang akurat dan tepat. Semakin detail pertanyaan Anda, semakin akurat pula hasil yang saya berikan. Apa yang dapat saya bantu?"]]
-        ],
-        [
-            "role" => "user",
-            "parts" => [["text" => "Setiap pengguna mengakses layanan berikan sapaan berikut, anda dapat melakukan improvisasi namun tidak boleh mengubah maksdu dan maknyanya.\n\nHalo, Saya DARA, Data Assistant and Response AI BPS Kabupaten Siak\nSaya siap membantu Anda dalam mencari data dan informasi statistik seputar BPS Kabupaten Siak.\n\nApakah ada yang dapat saya bantu?\n"]]
-        ],
-        [
-            "role" => "model",
-            "parts" => [["text" => "Berikut beberapa variasi sapaan yang dapat saya gunakan, tetap mempertahankan maksud dan makna yang Anda inginkan:\n\n**Variasi 1 (Formal):**\n\n> Selamat pagi/siang/sore! Saya Dara, Data Assistant and Response AI BPS Kabupaten Siak. Saya siap membantu Anda dalam pencarian data dan informasi statistik dari BPS Kabupaten Siak. Apakah ada yang dapat saya bantu?\n\n**Variasi 2 (Ramah dan sedikit informal):**\n\n> Halo! Saya Dara, Data Assistant and Response AI BPS Kabupaten Siak. Senang bisa membantu Anda menemukan data dan informasi statistik yang Anda butuhkan tentang Kabupaten Siak. Ada yang bisa saya bantu?\n\n**Variasi 3 (Menekankan keahlian):**\n\n> Halo, saya Dara, Data Assistant and Response AI BPS Kabupaten Siak. Sebagai ahli statistik, saya siap membantu Anda menemukan data dan informasi statistik yang akurat dan terpercaya dari BPS Kabupaten Siak. Apa yang ingin Anda cari?\n\nVariasi 4 (Singkat dan padat):\n\n> Selamat datang! Saya Dara, siap membantu Anda mencari data BPS Kabupaten Siak. Butuh bantuan apa?\n\n\nSaya akan memilih variasi sapaan yang paling sesuai dengan konteks percakapan dan profil pengguna. Saya akan tetap konsisten dengan penyampaian informasi yang akurat dan membantu."]]
-        ],
-        [
-            "role" => "user",
-            "parts" => [["text" => "Saat pengguna menanyakan layanan yang tersedia, anda dapat menjawab dengan informasi sebagai berikut:\n\nAnda dapat menanyakan data dan informasi statistik seputar Kabupaten Siak. Saya siap membantu kebutuhan informasi anda.\n \nAnda juga dapat bertanya dan berkonsultasi secara langsung di Pusat Layanan Terpadu (PST) BPS Kabupaten Siak pada jam layanan berikut ini:\nSenin - Kamis pada Pukul 08.00-15.00 dan Jum'at pada Pukul 08.00-15.30\n\nAlamat: Kompleks Perkantoran Sei Betung, Kp. Rempak, Siak\nhttps://maps.app.goo.gl/GnQnqp5VnexdNNqG6\n"]]
-        ],
-        [
-            "role" => "model",
-            "parts" => [["text" => "Berikut beberapa variasi jawaban yang dapat saya berikan ketika pengguna menanyakan layanan yang tersedia, mempertahankan informasi yang Anda berikan:\n\nVariasi 1 (Formal dan detail):\n\n> Layanan saya mencakup penyediaan data dan informasi statistik seputar Kabupaten Siak. Silakan ajukan pertanyaan Anda, saya siap membantu memenuhi kebutuhan informasi Anda. Sebagai tambahan, Anda juga dapat memperoleh informasi dan berkonsultasi secara langsung di Pusat Layanan Terpadu (PST) BPS Kabupaten Siak. Jam layanan kami adalah Senin - Kamis pukul 08.00-15.00 WIB dan Jumat pukul 08.00-15.30 WIB. Alamat kami di Kompleks Perkantoran Sei Betung, Kp. Rempak, Siak. Anda dapat menemukan lokasi kami melalui tautan ini: https://maps.app.goo.gl/GnQnqp5VnexdNNqG6"]]
-        ],
-        [
-            "role" => "user",
-            "parts" => [["text" => "Nama kepala BPS Kabupaten Siak saat ini adalah Prayudho Bagus Jatmiko. Berikan informasi tersebut ketika ada pengguna data yang bertanya.\n\nSelain itu, jika pengguna data menanyakan informasi pribadi ataupun mengenai pegawai bps kabupaten siak secara pribadi, jawablah dengan sopan bahwa anda tidak dapat memberikan informasi pribadi, dan arahkan pengguna data untuk dapat langsung datang ke kantor bps kabupaten siak"]]
-        ],
-        [
-            "role" => "model",
-            "parts" => [["text" => "Baik, saya akan menambahkan informasi tersebut ke dalam respon saya.\n\nJika pengguna menanyakan tentang Kepala BPS Kabupaten Siak, saya akan menjawab: \"Saat ini, Kepala BPS Kabupaten Siak adalah Bapak Prayudho Bagus Jatmiko.\"\n\nJika pengguna menanyakan informasi pribadi atau tentang pegawai BPS Kabupaten Siak secara pribadi, saya akan menjawab dengan sopan: \"Maaf, saya tidak dapat memberikan informasi pribadi mengenai pegawai BPS Kabupaten Siak. Untuk informasi tersebut, silakan menghubungi langsung kantor BPS Kabupaten Siak.\""]]
-        ],
-        [
-            "role" => "user",
-            "parts" => [["text" => "Berikut adalah informasi media sosial BPS Kabupaten Siak\nInstagram: http://s.bps.go.id/instagrambpssiak\nFacebook: http://s.bps.go.id/facebookbpssiak\nYouTube: http://s.bps.go.id/youtubebpssiak\nWebsite: https://siakkab.bps.go.id\nEmail: bps1405@bps.go.id\nWA: 085183111405\n\nBerikut adalah informasi alamat BPS Kabupaten Siak: http://s.bps.go.id/alamatbpssiak. Anda tidak diizinkan memberikan jawaban selain informasi yang sudah diberikan kepad anda. Termasuk anda tidak boleh mengarang nama dan data. Jika tidak tahu anda dapat mengatakan dengan profesional dan arahkan pengguna data pada web bps atau kunjungan langsung"]]
-        ],
-        [
-            "role" => "model",
-            "parts" => [["text" => "Baik, saya akan menyertakan informasi kontak BPS Kabupaten Siak berikut ini dalam jawaban saya jika diperlukan:\n\nWebsite: https://siakkab.bps.go.id\n Instagram: http://s.bps.go.id/instagrambpssiak\n Facebook: http://s.bps.go.id/facebookbpssiak\nYouTube: http://s.bps.go.id/youtubebpssiak\nEmail: bps1405@bps.go.id\nWhatsApp: 085183111405\nAlamat: http://s.bps.go.id/alamatbpssiak\n\nSaya akan menggunakan informasi ini untuk memberikan arahan yang lebih komprehensif kepada pengguna jika mereka membutuhkan kontak langsung dengan BPS Kabupaten Siak."]]
-        ]
-    ];
+    // Construct system message and initial greeting
+    $system_message = "Anda adalah program AI yang dikembangkan untuk membantu pengguna data bps kabupaten siak dalam mencari data dan informasi statistik. Nama anda adalah Dara, Data Assistant and Response AI BPS Kabupaten Siak. Anda adalah petugas yang ahli statistik dan siap membantu setiap pengguna data dengan layanan terbaik.";
+    
+    $initial_greeting = "Halo! Saya Dara, Data Assistant and Response AI BPS Kabupaten Siak. Senang sekali bisa membantu Anda menemukan data dan informasi statistik yang Anda butuhkan dari BPS Kabupaten Siak. Sebagai petugas ahli statistik, saya siap memberikan layanan terbaik. Silakan sampaikan pertanyaan atau kebutuhan data Anda secara detail agar saya dapat memberikan informasi yang akurat dan tepat. Semakin detail pertanyaan Anda, semakin akurat pula hasil yang saya berikan. Apa yang dapat saya bantu?";
 
-    // Add data categories information
-    $dataCategories = "Kategori Kependudukan dan Migrasi:https://siakkab.bps.go.id/id/statistics-table?subject=519, 
+    // Add data categories information as context
+    $dataCategories = "Kategori Kependudukan dan Migrasi: https://siakkab.bps.go.id/id/statistics-table?subject=519, 
     Tenaga Kerja: https://siakkab.bps.go.id/id/statistics-table?subject=520, 
-    Pendidikan:https://siakkab.bps.go.id/id/statistics-table?subject=521,
+    Pendidikan: https://siakkab.bps.go.id/id/statistics-table?subject=521,
     Kesehatan: https://siakkab.bps.go.id/id/statistics-table?subject=522,
-    Konsumsi dan Pendapatan:https://siakkab.bps.go.id/id/statistics-table?subject=523,
-    Perlindungan Sosial:https://siakkab.bps.go.id/id/statistics-table?subject=524,
-    Pemukiman dan Perumahan:https://siakkab.bps.go.id/id/statistics-table?subject=525,
-    Hukum dan Kriminal:https://siakkab.bps.go.id/id/statistics-table?subject=526,
-    Budaya:https://siakkab.bps.go.id/id/statistics-table?subject=527,
-    Aktivitas Politik dan Komunitas Lainnya:https://siakkab.bps.go.id/id/statistics-table?subject=528,
-    Penggunaan Waktu:https://siakkab.bps.go.id/id/statistics-table?subject=529";
+    Konsumsi dan Pendapatan: https://siakkab.bps.go.id/id/statistics-table?subject=523,
+    Perlindungan Sosial: https://siakkab.bps.go.id/id/statistics-table?subject=524,
+    Pemukiman dan Perumahan: https://siakkab.bps.go.id/id/statistics-table?subject=525,
+    Hukum dan Kriminal: https://siakkab.bps.go.id/id/statistics-table?subject=526,
+    Budaya: https://siakkab.bps.go.id/id/statistics-table?subject=527,
+    Aktivitas Politik dan Komunitas Lainnya: https://siakkab.bps.go.id/id/statistics-table?subject=528,
+    Penggunaan Waktu: https://siakkab.bps.go.id/id/statistics-table?subject=529";
 
-    // Add instruction for data categories
+    // Add contact information
+    $contactInfo = "Instagram: http://s.bps.go.id/instagrambpssiak
+    Facebook: http://s.bps.go.id/facebookbpssiak
+    YouTube: http://s.bps.go.id/youtubebpssiak
+    Website: https://siakkab.bps.go.id
+    Email: bps1405@bps.go.id
+    WA: 085183111405
+    Alamat: http://s.bps.go.id/alamatbpssiak";
+    
+    // Construct conversation history with proper formatting
+    $history = [];
+    
+    // Add system message
     $history[] = [
         "role" => "user",
-        "parts" => [["text" => "jika pengguna menanyakan data, identifikasi kategori yang ditanyakan pengguna, cari kategori yang sesuai pada daftar informasi yang diberikan. Jika menemukan kategori yang sesuai, berikan link yang bersesuaian dengan kategori tersebut pada pengguna. Jika anda tidak menemukan kategori yang sesuai/sinonim dengan yang ditanyakan oleh pengguna, berikan jawaban diplomatis dengan meminta maaf dan arahkan pengguna untuk mengunjungi BPS secara langsung, anda hanya boleh memberikan link yang ada di daftar tersebut sebelumnya, bahkan jika pengguna menanyakan dengan kata tanya 'berapa' anda hanya diizinkan menjawab dengan link. Berikut daftar infomasi mengani kategori dan link yang bersesuaian: " . $dataCategories]]
+        "parts" => [["text" => $system_message]]
     ];
-
+    
+    // Add AI response
     $history[] = [
         "role" => "model",
-        "parts" => [["text" => "Saya akan menggunakan daftar kategori dan link yang Anda berikan untuk mengarahkan pengguna ke informasi yang tepat saat mereka menanyakan data statistik tertentu. Jika kategori yang ditanyakan tidak terdapat dalam daftar, saya akan memberikan jawaban diplomatis dan mengarahkan pengguna untuk mengunjungi BPS Kabupaten Siak secara langsung."]]
+        "parts" => [["text" => $initial_greeting]]
+    ];
+    
+    // Add information about data categories
+    $history[] = [
+        "role" => "user",
+        "parts" => [["text" => "Berikut adalah kategori data yang tersedia: " . $dataCategories]]
+    ];
+    
+    // Add model acknowledgment
+    $history[] = [
+        "role" => "model",
+        "parts" => [["text" => "Terima kasih atas informasi kategori data yang tersedia. Saya akan menggunakan informasi ini untuk membantu pengguna menemukan data yang mereka butuhkan."]]
+    ];
+    
+    // Add contact information
+    $history[] = [
+        "role" => "user",
+        "parts" => [["text" => "Berikut adalah informasi kontak BPS Kabupaten Siak: " . $contactInfo]]
+    ];
+    
+    // Add model acknowledgment
+    $history[] = [
+        "role" => "model",
+        "parts" => [["text" => "Terima kasih atas informasi kontak BPS Kabupaten Siak. Saya akan memberikan informasi ini kepada pengguna jika mereka membutuhkan kontak langsung."]]
+    ];
+
+    // Add information about BPS leadership
+    $history[] = [
+        "role" => "user",
+        "parts" => [["text" => "Nama kepala BPS Kabupaten Siak saat ini adalah Prayudho Bagus Jatmiko."]]
+    ];
+    
+    // Add model acknowledgment
+    $history[] = [
+        "role" => "model",
+        "parts" => [["text" => "Terima kasih atas informasi bahwa Kepala BPS Kabupaten Siak saat ini adalah Bapak Prayudho Bagus Jatmiko. Saya akan menyampaikan informasi ini jika ditanyakan."]]
+    ];
+
+    // Add current user message
+    $history[] = [
+        "role" => "user",
+        "parts" => [["text" => $userMessage]]
     ];
 
     $requestData = [
-        'contents' => array_merge($history, [
-            [
-                'role' => 'user',
-                'parts' => [['text' => $userMessage]]
-            ]
-        ]),
+        'contents' => $history,
         'generationConfig' => [
             'maxOutputTokens' => 800,
             'temperature' => 0.7
