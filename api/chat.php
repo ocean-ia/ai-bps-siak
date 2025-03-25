@@ -1,3 +1,4 @@
+
 <?php
 require_once 'config.php';
 require_once 'utils/MessageFormatter.php';
@@ -60,31 +61,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         [
             "role" => "model",
             "parts" => [["text" => "Baik, saya akan menyertakan informasi kontak BPS Kabupaten Siak berikut ini dalam jawaban saya jika diperlukan:\n\nWebsite: https://siakkab.bps.go.id\n Instagram: http://s.bps.go.id/instagrambpssiak\n Facebook: http://s.bps.go.id/facebookbpssiak\nYouTube: http://s.bps.go.id/youtubebpssiak\nEmail: bps1405@bps.go.id\nWhatsApp: 085183111405\nAlamat: http://s.bps.go.id/alamatbpssiak\n\nSaya akan menggunakan informasi ini untuk memberikan arahan yang lebih komprehensif kepada pengguna jika mereka membutuhkan kontak langsung dengan BPS Kabupaten Siak."]]
-        ],
-        [
-            "role" => "model",
-            "parts" => [["text" => "jika pengguna menanyakan data, identifikasi kategori yang ditanyakan pengguna, cari kategori yang sesuai pada daftar informasi yang diberikan. Jika menemukan kategori yang sesuai, berikan link yang bersesuaian dengan kategori tersebut pada pengguna. Jika anda tidak menemukan kategori yang sesuai/sinonim dengan yang ditanyakan oleh pengguna, berikan jawaban diplomatis dengan meminta maaf dan arahkan pengguna untuk mengunjungi BPS secara langsung, anda hanya boleh memberikan link yang ada di daftar tersebut sebelumnya, 
-            bahkan jika pengguna menanyakan dengan kata tanya 'berapa' anda hanya diizinkan menjawab dengan link
-            Berikut daftar infomasi mengani kategori dan link yang bersesuaian
-            Kategori Kependudukan dan Migrasi:https://siakkab.bps.go.id/id/statistics-table?subject=519, 
-            // Tenaga Kerja: https://siakkab.bps.go.id/id/statistics-table?subject=520, 
-            // Pendidikan:https://siakkab.bps.go.id/id/statistics-table?subject=521,
-            // Kesehatan: https://siakkab.bps.go.id/id/statistics-table?subject=522,
-            // Konsumsi dan Pendapatan:https://siakkab.bps.go.id/id/statistics-table?subject=523,
-            // Perlindungan Sosial:https://siakkab.bps.go.id/id/statistics-table?subject=524,
-            // Pemukiman dan Perumahan:https://siakkab.bps.go.id/id/statistics-table?subject=525,
-            // Hukum dan Kriminal:https://siakkab.bps.go.id/id/statistics-table?subject=526,
-            // Budaya:https://siakkab.bps.go.id/id/statistics-table?subject=527,
-            // Aktivitas Politik dan Komunitas Lainnya:https://siakkab.bps.go.id/id/statistics-table?subject=528,
-            // Penggunaan Waktu:https://siakkab.bps.go.id/id/statistics-table?subject=529"]]
-        ],
-        [
-             "role" => "model",
-            "parts" => [["text" => ""]]
-        ],
-        
-    
+        ]
+    ];
 
+    // Add data categories information
+    $dataCategories = "Kategori Kependudukan dan Migrasi:https://siakkab.bps.go.id/id/statistics-table?subject=519, 
+    Tenaga Kerja: https://siakkab.bps.go.id/id/statistics-table?subject=520, 
+    Pendidikan:https://siakkab.bps.go.id/id/statistics-table?subject=521,
+    Kesehatan: https://siakkab.bps.go.id/id/statistics-table?subject=522,
+    Konsumsi dan Pendapatan:https://siakkab.bps.go.id/id/statistics-table?subject=523,
+    Perlindungan Sosial:https://siakkab.bps.go.id/id/statistics-table?subject=524,
+    Pemukiman dan Perumahan:https://siakkab.bps.go.id/id/statistics-table?subject=525,
+    Hukum dan Kriminal:https://siakkab.bps.go.id/id/statistics-table?subject=526,
+    Budaya:https://siakkab.bps.go.id/id/statistics-table?subject=527,
+    Aktivitas Politik dan Komunitas Lainnya:https://siakkab.bps.go.id/id/statistics-table?subject=528,
+    Penggunaan Waktu:https://siakkab.bps.go.id/id/statistics-table?subject=529";
+
+    // Add instruction for data categories
+    $history[] = [
+        "role" => "user",
+        "parts" => [["text" => "jika pengguna menanyakan data, identifikasi kategori yang ditanyakan pengguna, cari kategori yang sesuai pada daftar informasi yang diberikan. Jika menemukan kategori yang sesuai, berikan link yang bersesuaian dengan kategori tersebut pada pengguna. Jika anda tidak menemukan kategori yang sesuai/sinonim dengan yang ditanyakan oleh pengguna, berikan jawaban diplomatis dengan meminta maaf dan arahkan pengguna untuk mengunjungi BPS secara langsung, anda hanya boleh memberikan link yang ada di daftar tersebut sebelumnya, bahkan jika pengguna menanyakan dengan kata tanya 'berapa' anda hanya diizinkan menjawab dengan link. Berikut daftar infomasi mengani kategori dan link yang bersesuaian: " . $dataCategories]]
+    ];
+
+    $history[] = [
+        "role" => "model",
+        "parts" => [["text" => "Saya akan menggunakan daftar kategori dan link yang Anda berikan untuk mengarahkan pengguna ke informasi yang tepat saat mereka menanyakan data statistik tertentu. Jika kategori yang ditanyakan tidak terdapat dalam daftar, saya akan memberikan jawaban diplomatis dan mengarahkan pengguna untuk mengunjungi BPS Kabupaten Siak secara langsung."]]
     ];
 
     $requestData = [
