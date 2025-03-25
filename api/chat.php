@@ -1,5 +1,6 @@
 
 <?php
+// Make sure there are no whitespaces or BOM characters before this opening PHP tag
 require_once 'config.php';
 require_once 'utils/MessageFormatter.php';
 require_once 'utils/SessionManager.php';
@@ -78,7 +79,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
 
     $ch = curl_init();
-    $fullUrl = API_BASE_URL . '?key=' . GEMINI_API_KEY;
+    
+    // Updated API URL with the current Gemini Pro model endpoint
+    $fullUrl = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent?key=' . GEMINI_API_KEY;
     
     curl_setopt($ch, CURLOPT_VERBOSE, true);
     $verbose = fopen('php://temp', 'w+');

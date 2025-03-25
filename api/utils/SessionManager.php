@@ -1,3 +1,4 @@
+
 <?php
 class SessionManager {
     public static function init() {
