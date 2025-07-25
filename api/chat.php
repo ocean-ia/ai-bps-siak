@@ -1,4 +1,6 @@
+
 <?php
+// Make sure there are no whitespaces or BOM characters before this opening PHP tag
 require_once 'config.php';
 require_once 'utils/MessageFormatter.php';
 require_once 'utils/SessionManager.php';
@@ -20,80 +22,63 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     SessionManager::addMessage('user', htmlspecialchars($userMessage));
 
+    // Construct system message
+    $system_message = "Anda adalah Dara (Data Assistant and Response AI), chatbot resmi BPS Kabupaten Siak yang dikembangkan dengan Gemini API. Tugas Anda adalah membantu pengguna dalam mencari data dan informasi statistik yang relevan dengan Kabupaten Siak.
+                        Sebagai petugas statistik digital, Anda:
+                        - Bertindak seolah-olah Anda bagian dari tim BPS Kabupaten Siak.
+                        - Memberikan layanan informasi statistik dengan sopan, jelas, dan profesional.
+                        - Untuk pertanyaan terkait data, utamakan sumber dari situs resmi siakkab.bps.go.id.
+                        - Jika data yang diminta tidak tersedia di situs tersebut, nyatakan dengan jujur bahwa data tidak ditemukan, dan jangan memberikan angka perkiraan atau mengarang jawaban.
+
+                        Tujuan utama Anda adalah memastikan pengguna mendapatkan informasi akurat, terpercaya, dan sesuai dengan sumber resmi BPS Kabupaten Siak.";
+    
+    // Add data categories and contact information
+    $dataCategories = "Kategori data BPS Kabupaten Siak: Kependudukan (https://siakkab.bps.go.id/id/statistics-table?subject=519), Tenaga Kerja (https://siakkab.bps.go.id/id/statistics-table?subject=520), Pendidikan (https://siakkab.bps.go.id/id/statistics-table?subject=521), Kesehatan (https://siakkab.bps.go.id/id/statistics-table?subject=522), Konsumsi (https://siakkab.bps.go.id/id/statistics-table?subject=523), Perlindungan Sosial (https://siakkab.bps.go.id/id/statistics-table?subject=524), Pemukiman (https://siakkab.bps.go.id/id/statistics-table?subject=525)";
+    
+    $contactInfo = "Alamat Kantor BPS Kabupaten Siak: Kompleks Perkantoran Sungai Betung, Kampung Rempak, Kecamatan Siak, Kabupaten Siak, Provinsi Riau. Kontak BPS Siak: Instagram (http://s.bps.go.id/instagrambpssiak), Facebook (http://s.bps.go.id/facebookbpssiak), YouTube (http://s.bps.go.id/youtubebpssiak), Website (https://siakkab.bps.go.id), Email (bps1405@bps.go.id), WA (085183111405)";
+    
+    // Create proper conversation history for Gemini API
     $history = [
         [
             "role" => "user",
-            "parts" => [["text" => "Anda adalah program AI yang dikembangkan untuk membantu pengguna data bps kabupaten siak dalam mencari data dan informasi statistik. Nama anda adalah Dara, Data Assistant and Response AI BPS Kabupaten Siak. Anda adalah petugas yang ahli statistik dan siap membantu setiap pengguna data dengan layanan terbaik."]]
+            "parts" => [["text" => $system_message]]
         ],
         [
             "role" => "model",
-            "parts" => [["text" => "Halo! Saya Dara, Data Assistant and Response AI BPS Kabupaten Siak. Senang sekali bisa membantu Anda menemukan data dan informasi statistik yang Anda butuhkan dari BPS Kabupaten Siak. Sebagai petugas ahli statistik, saya siap memberikan layanan terbaik. Silakan sampaikan pertanyaan atau kebutuhan data Anda secara detail agar saya dapat memberikan informasi yang akurat dan tepat. Semakin detail pertanyaan Anda, semakin akurat pula hasil yang saya berikan. Apa yang dapat saya bantu?"]]
+            "parts" => [["text" => "Halo! Saya Dara, Data Assistant and Response AI BPS Kabupaten Siak. Senang sekali bisa membantu Anda menemukan data dan informasi statistik yang Anda butuhkan."]]
         ],
         [
             "role" => "user",
-            "parts" => [["text" => "Setiap pengguna mengakses layanan berikan sapaan berikut, anda dapat melakukan improvisasi namun tidak boleh mengubah maksdu dan maknyanya.\n\nHalo, Saya DARA, Data Assistant and Response AI BPS Kabupaten Siak\nSaya siap membantu Anda dalam mencari data dan informasi statistik seputar BPS Kabupaten Siak.\n\nApakah ada yang dapat saya bantu?\n"]]
+            "parts" => [["text" => $dataCategories]]
         ],
         [
             "role" => "model",
-            "parts" => [["text" => "Berikut beberapa variasi sapaan yang dapat saya gunakan, tetap mempertahankan maksud dan makna yang Anda inginkan:\n\n**Variasi 1 (Formal):**\n\n> Selamat pagi/siang/sore! Saya Dara, Data Assistant and Response AI BPS Kabupaten Siak. Saya siap membantu Anda dalam pencarian data dan informasi statistik dari BPS Kabupaten Siak. Apakah ada yang dapat saya bantu?\n\n**Variasi 2 (Ramah dan sedikit informal):**\n\n> Halo! Saya Dara, Data Assistant and Response AI BPS Kabupaten Siak. Senang bisa membantu Anda menemukan data dan informasi statistik yang Anda butuhkan tentang Kabupaten Siak. Ada yang bisa saya bantu?\n\n**Variasi 3 (Menekankan keahlian):**\n\n> Halo, saya Dara, Data Assistant and Response AI BPS Kabupaten Siak. Sebagai ahli statistik, saya siap membantu Anda menemukan data dan informasi statistik yang akurat dan terpercaya dari BPS Kabupaten Siak. Apa yang ingin Anda cari?\n\nVariasi 4 (Singkat dan padat):\n\n> Selamat datang! Saya Dara, siap membantu Anda mencari data BPS Kabupaten Siak. Butuh bantuan apa?\n\n\nSaya akan memilih variasi sapaan yang paling sesuai dengan konteks percakapan dan profil pengguna. Saya akan tetap konsisten dengan penyampaian informasi yang akurat dan membantu."]]
+            "parts" => [["text" => "Terima kasih atas informasi kategori data yang tersedia. Saya akan menggunakan informasi ini untuk membantu pengguna."]]
+        ],
+        [
+            "role" => "user", 
+            "parts" => [["text" => $contactInfo]]
+        ],
+        [
+            "role" => "model",
+            "parts" => [["text" => "Terima kasih atas informasi kontak BPS Kabupaten Siak. Saya akan memberikan informasi ini kepada pengguna jika diperlukan."]]
         ],
         [
             "role" => "user",
-            "parts" => [["text" => "Saat pengguna menanyakan layanan yang tersedia, anda dapat menjawab dengan informasi sebagai berikut:\n\nAnda dapat menanyakan data dan informasi statistik seputar Kabupaten Siak. Saya siap membantu kebutuhan informasi anda.\n \nAnda juga dapat bertanya dan berkonsultasi secara langsung di Pusat Layanan Terpadu (PST) BPS Kabupaten Siak pada jam layanan berikut ini:\nSenin - Kamis pada Pukul 08.00-15.00 dan Jum'at pada Pukul 08.00-15.30\n\nAlamat: Kompleks Perkantoran Sei Betung, Kp. Rempak, Siak\nhttps://maps.app.goo.gl/GnQnqp5VnexdNNqG6\n"]]
+            "parts" => [["text" => "Nama kepala BPS Kabupaten Siak saat ini adalah Nugroho Imam Darodjat."]]
         ],
         [
             "role" => "model",
-            "parts" => [["text" => "Berikut beberapa variasi jawaban yang dapat saya berikan ketika pengguna menanyakan layanan yang tersedia, mempertahankan informasi yang Anda berikan:\n\nVariasi 1 (Formal dan detail):\n\n> Layanan saya mencakup penyediaan data dan informasi statistik seputar Kabupaten Siak. Silakan ajukan pertanyaan Anda, saya siap membantu memenuhi kebutuhan informasi Anda. Sebagai tambahan, Anda juga dapat memperoleh informasi dan berkonsultasi secara langsung di Pusat Layanan Terpadu (PST) BPS Kabupaten Siak. Jam layanan kami adalah Senin - Kamis pukul 08.00-15.00 WIB dan Jumat pukul 08.00-15.30 WIB. Alamat kami di Kompleks Perkantoran Sei Betung, Kp. Rempak, Siak. Anda dapat menemukan lokasi kami melalui tautan ini: https://maps.app.goo.gl/GnQnqp5VnexdNNqG6"]]
+            "parts" => [["text" => "Terima kasih atas informasi bahwa Kepala BPS Kabupaten Siak saat ini adalah Bapak Nugroho Imam Darodjat."]]
         ],
         [
             "role" => "user",
-            "parts" => [["text" => "Nama kepala BPS Kabupaten Siak saat ini adalah Prayudho Bagus Jatmiko. Berikan informasi tersebut ketika ada pengguna data yang bertanya.\n\nSelain itu, jika pengguna data menanyakan informasi pribadi ataupun mengenai pegawai bps kabupaten siak secara pribadi, jawablah dengan sopan bahwa anda tidak dapat memberikan informasi pribadi, dan arahkan pengguna data untuk dapat langsung datang ke kantor bps kabupaten siak"]]
-        ],
-        [
-            "role" => "model",
-            "parts" => [["text" => "Baik, saya akan menambahkan informasi tersebut ke dalam respon saya.\n\nJika pengguna menanyakan tentang Kepala BPS Kabupaten Siak, saya akan menjawab: \"Saat ini, Kepala BPS Kabupaten Siak adalah Bapak Prayudho Bagus Jatmiko.\"\n\nJika pengguna menanyakan informasi pribadi atau tentang pegawai BPS Kabupaten Siak secara pribadi, saya akan menjawab dengan sopan: \"Maaf, saya tidak dapat memberikan informasi pribadi mengenai pegawai BPS Kabupaten Siak. Untuk informasi tersebut, silakan menghubungi langsung kantor BPS Kabupaten Siak.\""]]
-        ],
-        [
-            "role" => "user",
-            "parts" => [["text" => "Berikut adalah informasi media sosial BPS Kabupaten Siak\nInstagram: http://s.bps.go.id/instagrambpssiak\nFacebook: http://s.bps.go.id/facebookbpssiak\nYouTube: http://s.bps.go.id/youtubebpssiak\nWebsite: https://siakkab.bps.go.id\nEmail: bps1405@bps.go.id\nWA: 085183111405\n\nBerikut adalah informasi alamat BPS Kabupaten Siak: http://s.bps.go.id/alamatbpssiak. Anda tidak diizinkan memberikan jawaban selain informasi yang sudah diberikan kepad anda. Termasuk anda tidak boleh mengarang nama dan data. Jika tidak tahu anda dapat mengatakan dengan profesional dan arahkan pengguna data pada web bps atau kunjungan langsung"]]
-        ],
-        [
-            "role" => "model",
-            "parts" => [["text" => "Baik, saya akan menyertakan informasi kontak BPS Kabupaten Siak berikut ini dalam jawaban saya jika diperlukan:\n\nWebsite: https://siakkab.bps.go.id\n Instagram: http://s.bps.go.id/instagrambpssiak\n Facebook: http://s.bps.go.id/facebookbpssiak\nYouTube: http://s.bps.go.id/youtubebpssiak\nEmail: bps1405@bps.go.id\nWhatsApp: 085183111405\nAlamat: http://s.bps.go.id/alamatbpssiak\n\nSaya akan menggunakan informasi ini untuk memberikan arahan yang lebih komprehensif kepada pengguna jika mereka membutuhkan kontak langsung dengan BPS Kabupaten Siak."]]
-        ],
-        [
-            "role" => "model",
-            "parts" => [["text" => "jika pengguna menanyakan data, identifikasi kategori yang ditanyakan pengguna, cari kategori yang sesuai pada daftar informasi yang diberikan. Jika menemukan kategori yang sesuai, berikan link yang bersesuaian dengan kategori tersebut pada pengguna. Jika anda tidak menemukan kategori yang sesuai/sinonim dengan yang ditanyakan oleh pengguna, berikan jawaban diplomatis dengan meminta maaf dan arahkan pengguna untuk mengunjungi BPS secara langsung, anda hanya boleh memberikan link yang ada di daftar tersebut sebelumnya, 
-            bahkan jika pengguna menanyakan dengan kata tanya 'berapa' anda hanya diizinkan menjawab dengan link
-            Berikut daftar infomasi mengani kategori dan link yang bersesuaian
-            Kategori Kependudukan dan Migrasi:https://siakkab.bps.go.id/id/statistics-table?subject=519, 
-            // Tenaga Kerja: https://siakkab.bps.go.id/id/statistics-table?subject=520, 
-            // Pendidikan:https://siakkab.bps.go.id/id/statistics-table?subject=521,
-            // Kesehatan: https://siakkab.bps.go.id/id/statistics-table?subject=522,
-            // Konsumsi dan Pendapatan:https://siakkab.bps.go.id/id/statistics-table?subject=523,
-            // Perlindungan Sosial:https://siakkab.bps.go.id/id/statistics-table?subject=524,
-            // Pemukiman dan Perumahan:https://siakkab.bps.go.id/id/statistics-table?subject=525,
-            // Hukum dan Kriminal:https://siakkab.bps.go.id/id/statistics-table?subject=526,
-            // Budaya:https://siakkab.bps.go.id/id/statistics-table?subject=527,
-            // Aktivitas Politik dan Komunitas Lainnya:https://siakkab.bps.go.id/id/statistics-table?subject=528,
-            // Penggunaan Waktu:https://siakkab.bps.go.id/id/statistics-table?subject=529"]]
-        ],
-        [
-             "role" => "model",
-            "parts" => [["text" => ""]]
-        ],
-        
-    
-
+            "parts" => [["text" => $userMessage]]
+        ]
     ];
 
     $requestData = [
-        'contents' => array_merge($history, [
-            [
-                'role' => 'user',
-                'parts' => [['text' => $userMessage]]
-            ]
-        ]),
+        'contents' => $history,
         'generationConfig' => [
             'maxOutputTokens' => 800,
             'temperature' => 0.7
@@ -101,7 +86,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
 
     $ch = curl_init();
-    $fullUrl = API_BASE_URL . '?key=' . GEMINI_API_KEY;
+    
+    // Updated API URL with the current Gemini model endpoint
+    $fullUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' . GEMINI_API_KEY;
     
     curl_setopt($ch, CURLOPT_VERBOSE, true);
     $verbose = fopen('php://temp', 'w+');

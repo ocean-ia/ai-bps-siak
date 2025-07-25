@@ -5,10 +5,11 @@ SessionManager::init();
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Assistant and Response AI</title>
+    <title>DARA AI BPS Siak</title>
     <link rel="icon" type="image/x-icon" href="images/favicon_bps.png">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
@@ -20,6 +21,7 @@ SessionManager::init();
             padding: 0;
             width: 100%;
         }
+
         .chat-container {
             flex: 1;
             display: flex;
@@ -28,6 +30,7 @@ SessionManager::init();
             width: 100%;
             max-width: 100%;
         }
+
         .messages-container {
             flex: 1;
             overflow-y: auto;
@@ -44,22 +47,26 @@ SessionManager::init();
             max-height: calc(100vh - 160px);
             width: 100%;
         }
+
         .messages-container::-webkit-scrollbar {
             width: 6px;
         }
+
         .messages-container::-webkit-scrollbar-track {
             background: transparent;
         }
+
         .messages-container::-webkit-scrollbar-thumb {
             background-color: rgba(156, 163, 175, 0.5);
             border-radius: 3px;
         }
+
         .message {
             padding: 1rem;
             border-radius: 0.5rem;
             max-width: 80%;
             word-break: break-word;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             animation: fadeIn 0.3s ease-in-out;
             transition: all 0.3s ease;
             opacity: 0;
@@ -67,13 +74,16 @@ SessionManager::init();
             position: relative;
             margin: 1rem 0;
         }
+
         .message.visible {
             opacity: 1;
             transform: translateY(0);
         }
+
         .message-content {
             width: 100%;
         }
+
         .avatar {
             width: 40px;
             height: 40px;
@@ -81,9 +91,10 @@ SessionManager::init();
             position: absolute;
             object-fit: cover;
             border: 2px solid #fff;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
             background-color: #f5f5f5;
         }
+
         .user-message {
             background-color: #e3f2fd;
             margin-left: auto;
@@ -91,10 +102,12 @@ SessionManager::init();
             position: relative;
             margin-right: 1rem;
         }
+
         .user-message .avatar {
             right: -50px;
             top: 0;
         }
+
         .ai-message {
             background-color: #f5f5f5;
             margin-right: auto;
@@ -102,10 +115,12 @@ SessionManager::init();
             position: relative;
             margin-left: 50px;
         }
+
         .ai-message .avatar {
             left: -50px;
             top: 0;
         }
+
         .typing-indicator {
             display: none;
             padding: 1rem;
@@ -120,15 +135,18 @@ SessionManager::init();
             z-index: 10;
             backdrop-filter: blur(4px);
         }
+
         .typing-indicator.active {
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
+
         .typing-dots {
             display: flex;
             gap: 0.25rem;
         }
+
         .typing-dot {
             width: 4px;
             height: 4px;
@@ -136,36 +154,56 @@ SessionManager::init();
             background-color: #6b7280;
             animation: typingDot 1.4s infinite ease-in-out;
         }
-        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
-        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes typingDot {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-4px); }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
         }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingDot {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(-4px);
+            }
+        }
+
         .sticky-header {
             position: sticky;
             top: 0;
             background: white;
             z-index: 50;
             border-bottom: 1px solid #e5e7eb;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             padding: 0.75rem 0;
             width: 100%;
         }
+
         .header-title {
             font-size: 1.125rem;
             color: #2563eb;
             font-weight: 600;
         }
+
         .logo-container {
             display: flex;
             align-items: center;
         }
+
         .logo-container img {
             height: 2.5rem;
             width: auto;
             object-fit: contain;
         }
+
         .content-wrapper {
             flex: 1;
             display: flex;
@@ -175,6 +213,7 @@ SessionManager::init();
             height: 100%;
             width: 100%;
         }
+
         .empty-state {
             display: flex;
             flex-direction: column;
@@ -185,6 +224,7 @@ SessionManager::init();
             text-align: center;
             padding: 2rem;
         }
+
         .input-container {
             padding: 1rem;
             background: white;
@@ -193,6 +233,7 @@ SessionManager::init();
             bottom: 0;
             width: 100%;
         }
+
         .container {
             width: 100%;
             max-width: 100%;
@@ -201,19 +242,20 @@ SessionManager::init();
         }
     </style>
 </head>
+
 <body>
     <header class="sticky-header">
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between">
                 <div class="logo-container">
-                    <img 
-                        src="images/bps-siak-logo.png" 
-                        alt="BPS Kabupaten Siak Logo" 
-                        class="h-10"
-                    />
+                    <img
+                        src="images/bps-siak-logo.png"
+                        alt="BPS Kabupaten Siak Logo"
+                        class="h-10" />
                 </div>
                 <h1 class="header-title">
-                    Data Assistant and Response AI
+                    <span class="block sm:hidden">DARA AI</span>
+                    <span class="hidden sm:block">Data Assistant and Response AI</span>
                 </h1>
             </div>
         </div>
@@ -226,10 +268,27 @@ SessionManager::init();
                     <?php
                     $messages = SessionManager::getMessages();
                     if (empty($messages)) {
-                        echo '<div class="empty-state">
-                            <p class="text-xl mb-2">Mulai mengajukan pertanyaan tentang data BPS Kabupaten Siak</p>
-                            <p class="text-sm">Ketik pertanyaan Anda di bawah ini</p>
-                        </div>';
+                        $alternatif = [
+                            "Mari jelajahi data Siak bersama.",
+                            "Siap bantu temukan informasi statistik yang kamu butuhkan.",
+                            "Langsung aja mulai eksplorasi data BPS Siak.",
+                            "Statistik resmi, akses cepat. Mau mulai dari mana?",
+                            "Data BPS Siak, satu pertanyaan bisa buka banyak wawasan.",
+                            "Data Siak, siap dijelajahi. Kamu mulai dari mana?",
+                            "Statistik Siak tersedia, langsung aja temukan jawabannya.",
+                            "Dari angka ke wawasan—siap bantu jawab pertanyaanmu.",
+                            "Data bukan sekadar angka, ayo gali maknanya bersama.",
+                            "Satu pertanyaan bisa buka banyak cerita statistik Siak.",
+                            "Siap jawab pertanyaanmu tentang data Siak, langsung mulai aja.",
+                            "Data BPS Siak tersedia, tinggal pilih topikmu.",
+                            "Akses cepat ke statistik Siak, apa yang mau kamu ketahui?",
+                            "Mulai percakapanmu dengan data, kami siap membantu.",
+                            "Statistik akurat, respons instan—silakan ajukan pertanyaan."
+                        ];
+                        $pilihan = $alternatif[array_rand($alternatif)];
+                        echo '<div class="empty-state">';
+                        echo '<p class="text-xl mb-2">' . $pilihan . '</p>';
+                        echo '</div>';
                     } else {
                         foreach ($messages as $message) {
                             $class = $message['type'] === 'user' ? 'user-message' : 'ai-message';
@@ -242,30 +301,28 @@ SessionManager::init();
                     }
                     ?>
                 </div>
-                
+
                 <div class="typing-indicator" id="typing-indicator">
-                    AI sedang mengetik...
+                    DARA sedang mengetik...
                     <div class="typing-dots">
                         <div class="typing-dot"></div>
                         <div class="typing-dot"></div>
                         <div class="typing-dot"></div>
                     </div>
                 </div>
-                
+
                 <div class="input-container">
                     <form id="chat-form" class="flex gap-2">
-                        <input 
-                            type="text" 
-                            name="prompt" 
+                        <input
+                            type="text"
+                            name="prompt"
                             id="prompt-input"
-                            placeholder="Contoh: Apa itu Badan Pusat Statistik?" 
+                            placeholder="Contoh: Apa itu Badan Pusat Statistik?"
                             class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-                            required
-                        >
-                        <button 
-                            type="submit" 
-                            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                        >
+                            required>
+                        <button
+                            type="submit"
+                            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                             Kirim
                         </button>
                     </form>
@@ -275,7 +332,7 @@ SessionManager::init();
     </div>
 
     <div class="text-center py-2 text-sm text-gray-500 bg-white border-t w-full">
-        AI Data Assistant dapat membuat kesalahan. Mohon periksa kembali informasi penting.
+        DARA AI dapat membuat kesalahan. Mohon periksa kembali informasi penting.
     </div>
 
     <script>
@@ -288,8 +345,8 @@ SessionManager::init();
             if (messagesContainer) {
                 const lastMessage = messagesContainer.lastElementChild;
                 if (lastMessage) {
-                    lastMessage.scrollIntoView({ 
-                        behavior: smooth ? 'smooth' : 'auto', 
+                    lastMessage.scrollIntoView({
+                        behavior: smooth ? 'smooth' : 'auto',
                         block: 'end'
                     });
                 }
@@ -299,7 +356,7 @@ SessionManager::init();
         function appendMessage(content, type) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${type}-message`;
-            
+
             if (type === 'ai') {
                 const avatar = document.createElement('img');
                 avatar.src = 'images/default-avatar.png';
@@ -307,14 +364,14 @@ SessionManager::init();
                 avatar.className = 'avatar';
                 messageDiv.appendChild(avatar);
             }
-            
+
             const contentDiv = document.createElement('div');
             contentDiv.className = 'message-content';
             contentDiv.innerHTML = content;
             messageDiv.appendChild(contentDiv);
-            
+
             messagesContainer.appendChild(messageDiv);
-            
+
             requestAnimationFrame(() => {
                 messageDiv.classList.add('visible');
                 scrollToBottom();
@@ -337,7 +394,7 @@ SessionManager::init();
 
         chatForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const prompt = promptInput.value.trim();
             if (!prompt) return;
 
@@ -373,4 +430,5 @@ SessionManager::init();
         window.addEventListener('resize', () => scrollToBottom(false));
     </script>
 </body>
+
 </html>
